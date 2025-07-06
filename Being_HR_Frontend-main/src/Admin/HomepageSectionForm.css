@@ -1,0 +1,133 @@
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #000; /* Form background - black */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  color: white; /* Label and static text */
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: white;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: black;              /* ✅ Input text color */
+  background-color: white;   /* ✅ Light background */
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: black;              /* ✅ Placeholder text color */
+}
+
+.form-group input[type="file"] {
+  color: white;              /* Adjust if file input text is invisible */
+  margin-top: 0.5rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+
+.homepage-form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 8px;
+  color: white;
+}
+
+.homepage-form-container label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.homepage-form-container input[type="text"],
+.homepage-form-container textarea,
+.homepage-form-container input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: black; /* 🔥 Text color black */
+  background-color: #fff;
+}
+
+.homepage-form-container button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.homepage-form-container button:hover {
+  background-color: #0056b3;
+}
+
+.message {
+  margin-top: 1rem;
+  font-weight: bold;
+}
+
+.homepage-preview {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #444;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-item img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.image-item p {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-top: 0.3rem;
+}

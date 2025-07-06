@@ -1,0 +1,92 @@
+/* Dashboard.css */
+
+.dashboard {
+    padding: 20px;
+    background-color: #f4f7fc;
+    text-align: center;
+    background-color: #0a0a0a;
+    display: block;
+   
+  }
+  
+ 
+  
+  .admin-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Grid layout that adjusts to screen size */
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .card {
+    background-color: #555;
+    border-radius: 8px;
+    width: 330px;
+    height: 330px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 1.1em;
+    color: white;
+  }
+  
+  .card-link {
+    display: inline-block;
+    margin-top: 15px;
+    width: 90%;
+    margin-left: 5%;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .card-link:hover {
+    background-color: #45a049;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px); /* Slight lift effect on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Responsive adjustments for mobile screens */
+  @media (max-width: 768px) {
+    .card-container {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ensure the cards fill the width even on smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 2em;
+    }
+  
+    .card h3 {
+      font-size: 1.5em;
+    }
+  
+    .card p {
+      font-size: 1em;
+    }
+  
+    .card-link {
+      padding: 8px 16px;
+      font-size: 1em;
+    }
+  }
+  

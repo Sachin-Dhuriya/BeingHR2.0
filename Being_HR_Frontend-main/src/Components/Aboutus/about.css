@@ -1,0 +1,193 @@
+/* General Styles */
+
+  
+  h1, h2, h3 {
+    margin: 0;
+  }
+  
+  p {
+    margin: 0 0 1rem 0;
+  }
+  
+  /* Header Section */
+  .header {
+    background: linear-gradient(90deg, #4caf50, #388e3c);
+    color: #fff;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  
+  .header-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .header .title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .header .subtitle {
+    font-size: 18px;
+  }
+  
+  /* Main Container */
+  .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Section Styles */
+  .section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: rgb(33, 33, 33);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+  
+  .section-image {
+    width: 50%;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .content {
+    width: 45%;
+  }
+  
+  .content h2 {
+    color: #4caf50;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+  
+  .content p {
+    font-size: 14px;
+    color: white;
+  }
+  
+  /* Services Section */
+  .services {
+    text-align: center;
+  }
+  
+  .services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .section-title-about{
+    color: white;
+  }
+  
+  .service-card {
+    background-color: rgb(33, 33, 33);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 30%;
+    text-align: center;
+  }
+  
+  .service-card img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .service-card h3 {
+    color: #4caf50;
+    margin-bottom: 10px;
+  }
+  
+  .service-card p {
+    color: white;
+  }
+  
+  /* Call to Action Section */
+  .cta {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(90deg, #4caf50, #388e3c);
+    color: #fff;
+    border-radius: 10px;
+  }
+  
+  .cta h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .cta p {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .cta .cta-button {
+    background-color: #fff;
+    color: #4caf50;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .cta .cta-button:hover {
+    background-color: #e8f5e9;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .section {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .content,
+    .section-image {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .header{
+      padding: 10px ;
+    }
+    .service-card {
+      background-color: rgb(33, 33, 33);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+    }
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    
+    .header .subtitle {
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+  

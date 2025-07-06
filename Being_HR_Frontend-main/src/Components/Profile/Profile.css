@@ -1,0 +1,99 @@
+.user-profile-container {
+    width: 50%;
+    margin: 30px auto;
+    padding: 20px;
+    background: #2f2e2e;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    align-items: center;
+  }
+  .user-profile-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4caf50;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+    border: 3px solid #c3c5c8;
+    margin-bottom: 15px;
+  }
+  
+  .user-profile-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+  }
+  
+  .user-profile-email {
+    font-size: 16px;
+    color: #e2e2e2;
+  }
+  
+  .user-profile-events-title {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .user-profile-events-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .user-profile-event-item {
+    background: #3f3e3e;
+    padding: 8px;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    color: rgb(243, 243, 243);
+  }
+  .user-profile-event-item:hover {
+    background: #565555;
+    color: #e2e2e2;
+  }
+  
+  .user-profile-no-events {
+    color: #888;
+    font-style: italic;
+  }
+  
+  .user-profile-logout-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background: #4caf50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .user-profile-logout-button:hover {
+    background: #4ece2a;
+  }
+  
+  @media (max-width: 480px) {
+    .user-profile-container{
+      width: 95%;
+      margin-top: 10px;
+    }
+   
+    .user-profile-events-list{
+      text-align: left;
+    }
+    .user-profile-events-title{
+      text-align: left;
+    }
+  }

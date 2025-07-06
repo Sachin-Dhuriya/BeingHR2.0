@@ -1,0 +1,37 @@
+const event=[
+    {
+      "category": "Flagship Events",
+      "overview": "Our HR Conclaves are large-scale gatherings featuring keynote speeches, panel discussions, and networking opportunities.",
+      "highlights": [
+        "CHRO Confex & Awards: Recognizing excellence and innovation in HR practices.",
+        "Future of Work Summit: Exploring trends like hybrid work, AI in HR, and DEIB."
+      ],
+      "image": "https://th.bing.com/th/id/OIP.pXPxVa1g_HWFt1FKYJfLdAHaE8?rs=1&pid=ImgDetMain",
+      "upcoming": {
+        "title": "CHRO Confex 2025",
+        "date": "February 12, 2025",
+        "location": "Mumbai",
+        "topics": ["DEIB", "AI in Recruitment", "HR Innovations"],
+        "cta": "Register for the Event",
+        "link":"/skill"
+      }
+    },
+    {
+      "category": "Skill-Building Workshops",
+      "overview": "Hands-on, interactive sessions led by industry experts to enhance your HR skills and knowledge.",
+      "highlights": [
+        "HR Analytics and Data-Driven Decision-Making",
+        "Diversity, Equity, Inclusion & Belonging (DEIB) Practices",
+        "Talent Acquisition Strategies"
+      ],
+      "image": "https://th.bing.com/th/id/OIP.mmD6vbqxt1zfDfY6urRwmQHaEK?w=748&h=421&rs=1&pid=ImgDetMain",
+      "upcoming": {
+        "title": "HR Analytics Bootcamp",
+        "date": "March 10, 2025",
+        "location": "Online",
+        "cta": "Explore All Workshops",
+        "link":"/Flagship"
+      }
+    }
+  ]
+  

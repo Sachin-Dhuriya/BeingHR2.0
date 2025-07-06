@@ -1,0 +1,234 @@
+/* ContactUs.css */
+
+.cnt-container {
+  background-color: #333333;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.cnt-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.cnt-header p {
+  max-width: 600px;
+  margin: auto;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.cnt-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.cnt-card {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 8px;
+  width: 350px;
+  text-align: left;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out;
+}
+
+.cnt-card:hover {
+  transform: scale(1.03);
+}
+
+.cnt-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.cnt-card p {
+  font-size: 1rem;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cnt-card a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+.cnt-card a:hover {
+  text-decoration: underline;
+}
+
+.cnt-form {
+  width: 400px;
+}
+
+.cnt-input,
+.cnt-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #555;
+  border: 1px solid #666;
+  border-radius: 4px;
+  color: white;
+  font-size: 1rem;
+}
+
+.cnt-textarea {
+  height: 100px;
+  resize: none;
+}
+
+.cnt-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.3s ease-in-out;
+}
+
+.cnt-button:hover {
+  background-color: #3e8e41;
+}
+
+.cnt-social {
+  margin-top: 40px;
+}
+
+.cnt-social h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.cnt-social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 1.2rem;
+}
+
+.cnt-social-links a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cnt-social-links a:hover {
+  color: #3e8e41;
+}
+
+
+.contact-page-sections {
+  width: 650px;
+  padding: 20px;
+  background: #444;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-section-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.submitctn-button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submitctn-button:hover {
+  background: #45a049;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .cnt-card{
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .cnt-card{
+    width: 100%;
+  }
+  .cnt-header p {
+    max-width: 600px;
+    margin: auto;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    text-align: left;
+}
+.cnt-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-align: left;
+}
+}
