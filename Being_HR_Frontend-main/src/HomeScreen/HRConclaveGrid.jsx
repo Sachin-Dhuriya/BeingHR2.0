@@ -1,84 +1,111 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import axios from "axios";
 import "./HRConclaveGrid.css";
-
-const images = [
-  { src: "/home.jpg", size: "tall" },
-  { src: "/home.jpg", size: "wide" },
-  { src: "/home.jpg", size: "wide" },
-  { src: "/img6.jpg", size: "normal" },
-  { src: "/img7.jpg", size: "normal" },
-  { src: "/home.jpg", size: "tall" },
-  { src: "/home.jpg", size: "normal" },
-  { src: "/home.jpg", size: "wide" },
-  { src: "/home.jpg", size: "normal" },
-  { src: "/home.jpg", size: "normal" },
-];
 
 export default function HRConclave() {
   const [showMore, setShowMore] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [homepageData, setHomepageData] = useState(null);
+
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/admin/homepage-section");
+        setHomepageData(res.data.homepageSection);
+      } catch (err) {
+        console.error("Error fetching homepage data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getSizeClass = (i) => {
+    const sizes = ["normal", "wide", "tall"];
+    return sizes[i % sizes.length];
+  };
+
+  if (!homepageData) return <p>Loading...</p>;
+
+  // Split content lines
+  const contentLines = homepageData.content.split('\n');
 
   return (
-    <div className="hr-container">
-      {/* Animate Image Grid from Left */}
+    <div className="hr-container" ref={ref}>
+      {/* ✅ Image Grid */}
       <motion.div
         className="image-grid-masonry"
-        initial={{ x: -150, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
+        initial={{ opacity: 0, y: 100 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        {images.map((image, i) => (
+        {homepageData.images.map((img, i) => (
           <motion.div
-            key={i}
-            className={`image-card ${image.size}`}
+            key={img._id}
+            className={`image-card ${getSizeClass(i)}`}
+            onClick={() => setSelectedImage(img.url)}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 + i * 0.1, duration: 0.4 }}
+            transition={{ delay: 0.2 + i * 0.05, duration: 0.4 }}
           >
-            <img src={image.src} alt={`HR Conclave ${i + 1}`} />
+            <img src={img.url} alt={img.caption || `Image ${i + 1}`} />
           </motion.div>
         ))}
       </motion.div>
 
-      {/* Animate Text Content from Bottom to Top */}
+      {/* ✅ Text Section with line breaks preserved */}
       <motion.div
         className="text-section"
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
+        initial={{ opacity: 0, y: 100 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.3 }}
       >
-        <h2>Your Growth, Our Mission</h2>
-        <p>
-          BeingHR is India's leading community for HR professionals, offering unmatched
-          opportunities to connect, learn, and grow. With over 60,000 members from industries
-          like IT, Media, Manufacturing, and Startups, we are redefining HR's role as a
-          strategic partner in business success.
-        </p>
+        <h2>{homepageData.title}</h2>
 
-        <AnimatePresence>
-          {showMore && (
-            <motion.p
-              key="more-text"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5 }}
+        <div className="content-preview">
+          {contentLines.slice(0, showMore ? contentLines.length : 6).map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+
+          {contentLines.length > 6 && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowMore(!showMore)}
+              className="know-more-btn"
             >
-              Whether you're looking to expand your knowledge, learn new skills, connect with
-              other professionals, or create new business opportunities, Gain Skills is the
-              right partner for you.
-            </motion.p>
+              {showMore ? "Show Less" : "Know More"}
+            </motion.button>
           )}
-        </AnimatePresence>
-
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setShowMore(!showMore)}
-        >
-          {showMore ? "Show Less" : "Know More"}
-        </motion.button>
+        </div>
       </motion.div>
+
+      {/* ✅ Image Popup */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            className="popup-backdrop"
+            onClick={() => setSelectedImage(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.img
+              src={selectedImage}
+              alt="Popup"
+              className="popup-image"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

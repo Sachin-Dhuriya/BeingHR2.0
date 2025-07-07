@@ -111,7 +111,13 @@ const HomepageSectionForm = () => {
         <div className="homepage-preview">
           <h3>📌 Current Homepage Section</h3>
           <h4>{homepageData.title}</h4>
-          <p>{homepageData.content}</p>
+
+          <div className="content-preview">
+            {homepageData.content.split('\n').map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
+
           <div className="image-grid">
             {homepageData.images.map((img, index) => (
               <div key={index} className="image-item">
