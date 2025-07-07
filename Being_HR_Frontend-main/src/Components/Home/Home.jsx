@@ -4,6 +4,7 @@ import './home.css';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { FaLinkedin, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import HRConclaveGrid from '../../HomeScreen/HRConclaveGrid';
 
 const expertiseAreas = [
   {
@@ -22,7 +23,6 @@ const expertiseAreas = [
     alt: "Digital Event",
   },
 ];
-
 
 const testimonials = [
   {
@@ -78,10 +78,6 @@ function Home() {
     fetchEvents();
   }, []);
 
- 
-
-
-
   const [startIndex, setStartIndex] = useState(0);
   const [itemsToShow, setItemsToShow] = useState(3);
 
@@ -109,7 +105,8 @@ function Home() {
 
   return (
     <div className="app">
-    <motion.div className="hero-section" initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
+      {/* Hero Section */}
+      <motion.div className="hero-section" initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }}>
         <motion.div className="hero-content" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, delay: 0.5 }}>
           <h1 className="hero-title">Empowering HR Professionals Across India</h1>
           <p className="hero-subtitle">Join the largest community of HR professionals.</p>
@@ -119,48 +116,16 @@ function Home() {
           </div>
         </motion.div>
       </motion.div>
-   
-     {/* Home Section */}
-     <div className="home-container">
-        <div className="images-section">
-          <div className="image-row">
-            <img src="/home.jpg" alt="Event 6" className="image" />
-          </div>
-        </div>
-        <div className="text-section">
-          <h1> Your Growth, Our Mission</h1>
-          <p>
-          A short paragraph introducing BeingHR:
-BeingHR is India’s leading community for HR professionals, offering unmatched opportunities to connect,
- learn, and grow. With over 60,000 members from industries like IT, Media, Manufacturing, and Startups, we are redefining HR's role as a strategic partner in business success.
 
-          </p>
-         
-          <p>
-            Whether you're looking to expand your knowledge, learn new skills,
-            connect with other professionals, or create new business opportunities,
-            Gain Skills is the right partner for you.
-          </p>
-          <button className="know-more-button">Know More</button>
-        </div>
-      </div>
+      {/* HR Conclave Section */}
+      <HRConclaveGrid />
+
       {/* Expertise Section */}
-      <motion.div 
-        className="expertise-section"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+      <motion.div className="expertise-section" initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <h2 className="expertise-title">We Are Experts In</h2>
         <div className="expertise-grid">
           {expertiseAreas.map((area, index) => (
-            <motion.div 
-              key={index} 
-              className="expertise-card"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
+            <motion.div key={index} className="expertise-card">
               <img src={area.image} alt={area.alt} className="expertise-image" />
               <div className="expertise-content">
                 <h3 className="expertise-card-title">{area.title}</h3>
@@ -171,81 +136,53 @@ BeingHR is India’s leading community for HR professionals, offering unmatched 
       </motion.div>
 
       {/* Upcoming Events Section */}
-      <motion.div 
-        className="home-events-list"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+      <motion.div className="home-events-list" initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <h1>Our Upcoming Events</h1>
         <h3>Engage with Experts, Expand Your Horizons</h3>
-        <motion.div className="upcoming-events">
+        <div className="upcoming-events">
           {mongoEvents.map((event, index) => (
-            <motion.div 
-              className="home-event-card"
-              key={`mongo-${index}`}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <img 
-                src={event.image || "https://via.placeholder.com/400"}
-                alt={event.title}
-                className="event-image" 
-              />
+            <div className="home-event-card" key={`mongo-${index}`}>
+              <img src={event.image || "https://via.placeholder.com/400"} alt={event.title} className="event-image" />
               <div className="home-event-details">
                 <h2>{event.title}</h2>
                 <p><strong>Date:</strong> {event.date}</p>
                 <p><strong>Location:</strong> {event.location}</p>
                 <p><strong>Time:</strong> {event.time}</p>
               </div>
-              <Link to={`/eventdetails/${event._id}`} className="cta-button-h">
-                Book
-              </Link>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-
-      {/* Testimonials Section */}
-      <motion.div 
-        className="two"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
-     <div className="testimonials-container">
-      <h2 className="testimonials-title">Voices from Our Community</h2>
-      <div className="testimonials-wrapper">
-        <button className="arrow-button" onClick={prevTestimonial}>←</button>
-        <div className="testimonial-cards">
-          {testimonials.slice(startIndex, startIndex + itemsToShow).map((testimonial, index) => (
-            <div key={index} className="testimonial-card">
-              <div className="profile-section">
-                <img src={testimonial.image} alt={testimonial.name} className="profile-image" />
-                <div className="profile-info">
-                  <h3>{testimonial.name}</h3>
-                  <p>{testimonial.position}</p>
-                </div>
-              </div>
-              <div className="rating">{"⭐".repeat(testimonial.rating)}</div>
-              <p className="feedback">{testimonial.feedback}</p>
+              <Link to={`/eventdetails/${event._id}`} className="cta-button-h">Book</Link>
             </div>
           ))}
         </div>
-        <button className="arrow-button" onClick={nextTestimonial}>→</button>
-      </div>
-    </div>
-      
+      </motion.div>
+
+      {/* Testimonials Section */}
+      <motion.div className="two" initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <div className="testimonials-container">
+          <h2 className="testimonials-title">Voices from Our Community</h2>
+          <div className="testimonials-wrapper">
+            <button className="arrow-button" onClick={prevTestimonial}>←</button>
+            <div className="testimonial-cards">
+              {testimonials.slice(startIndex, startIndex + itemsToShow).map((testimonial, index) => (
+                <div key={index} className="testimonial-card">
+                  <div className="profile-section">
+                    <img src={testimonial.image} alt={testimonial.name} className="profile-image" />
+                    <div className="profile-info">
+                      <h3>{testimonial.name}</h3>
+                      <p>{testimonial.position}</p>
+                    </div>
+                  </div>
+                  <div className="rating">{"⭐".repeat(testimonial.rating)}</div>
+                  <p className="feedback">{testimonial.feedback}</p>
+                </div>
+              ))}
+            </div>
+            <button className="arrow-button" onClick={nextTestimonial}>→</button>
+          </div>
+        </div>
       </motion.div>
 
       {/* Contact Section */}
-      <motion.div 
-        className="contact-section-home"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-      >
+      <motion.div className="contact-section-home" initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <h2>Have Questions? Let’s Connect!</h2>
         <div className="home-contact-info">
           <p>Email: <a href="mailto:shyam@beinghr.online">shyam@beinghr.online</a></p>

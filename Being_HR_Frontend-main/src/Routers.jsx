@@ -19,6 +19,7 @@ import EventRegistration from './Admin/EventRegistration'
 import EventHosting from './Admin/EventHosting'
 import EventDetails from './Components/Allevents/EventDetails'
 import Profile from './Components/Profile/Profile'
+// import HRConclaveGrid from './Components/homeScreen/HRConclaveGrid's
 const Routers = () => {
   
     
