@@ -22,6 +22,21 @@ const expertiseAreas = [
     image: "https://th.bing.com/th/id/OIP.ucziH6SkmTjshyKZt8j88wHaE7?w=1430&h=953&rs=1&pid=ImgDetMain",
     alt: "Digital Event",
   },
+  {
+    title: "Networking Opportunities",
+    image: "https://th.bing.com/th/id/OIP.3qaXOzEiqNAhIZWc3LpleAHaE8?w=252&h=180&c=7&r=0&o=5&dpr=1.2&pid=1.7",
+    alt: "Conference Event",
+  },
+  {
+    title: "Professional Development",
+    image: "https://th.bing.com/th?id=OIP.Hupg0HJHR_18oATetZwIDAHaE8&w=306&h=204&c=8&rs=1&qlt=90&o=6&dpr=1.2&pid=3.1&rm=2",
+    alt: "Bespoke Event",
+  },
+  {
+    title: "Exclusive Events",
+    image: "https://th.bing.com/th/id/OIP.ucziH6SkmTjshyKZt8j88wHaE7?w=1430&h=953&rs=1&pid=ImgDetMain",
+    alt: "Digital Event",
+  },
 ];
 
 const testimonials = [
@@ -102,6 +117,25 @@ function Home() {
   const prevTestimonial = () => {
     setStartIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
+const [popupData, setPopupData] = useState(null);
+
+const openPopup = (data) => {
+  setPopupData(data);
+};
+
+const closePopup = () => {
+  setPopupData(null);
+};
+
+const scrollExpertise = (direction) => {
+  const carousel = document.getElementById("expertise-carousel");
+  const scrollAmount = 350;
+  if (direction === "left") {
+    carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+};
 
   return (
     <div className="app">
@@ -119,21 +153,43 @@ function Home() {
 
       {/* HR Conclave Section */}
       <HRConclaveGrid />
-
+      
       {/* Expertise Section */}
-      <motion.div className="expertise-section" initial="hidden" whileInView="visible" viewport={{ once: true }}>
-        <h2 className="expertise-title">We Are Experts In</h2>
-        <div className="expertise-grid">
-          {expertiseAreas.map((area, index) => (
-            <motion.div key={index} className="expertise-card">
-              <img src={area.image} alt={area.alt} className="expertise-image" />
-              <div className="expertise-content">
-                <h3 className="expertise-card-title">{area.title}</h3>
-              </div>
-            </motion.div>
-          ))}
+<motion.div className="expertise-section" initial="hidden" whileInView="visible" viewport={{ once: true }}>
+  <h2 className="expertise-title">We Are Experts In</h2>
+
+  <div className="expertise-carousel-wrapper">
+    <button className="scroll-btn left" onClick={() => scrollExpertise('left')}>←</button>
+
+    <div className="expertise-carousel" id="expertise-carousel">
+      {expertiseAreas.map((area, index) => (
+        <div
+          key={index}
+          className="expertise-card"
+          onClick={() => openPopup(area)}
+        >
+          <img src={area.image} alt={area.alt} className="expertise-image" />
+          <div className="expertise-content">
+            <h3 className="expertise-card-title">{area.title}</h3>
+          </div>
         </div>
-      </motion.div>
+      ))}
+    </div>
+
+    <button className="scroll-btn right" onClick={() => scrollExpertise('right')}>→</button>
+  </div>
+
+  {popupData && (
+    <div className="popup-overlay" onClick={closePopup}>
+      <div className="popup-card" onClick={(e) => e.stopPropagation()}>
+        <img src={popupData.image} alt={popupData.alt} />
+        <h3>{popupData.title}</h3>
+        <p>{popupData.alt}</p>
+        <button onClick={closePopup}>Close</button>
+      </div>
+    </div>
+  )}
+</motion.div>
 
       {/* Upcoming Events Section */}
       <motion.div className="home-events-list" initial="hidden" whileInView="visible" viewport={{ once: true }}>
