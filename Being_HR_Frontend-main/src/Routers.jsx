@@ -10,6 +10,7 @@ import Events from './Components/Event/Events'
 import DashBoard from './Admin/DashBoard'
 import UserDetails from './Admin/UserDetails'
 import HomepageSectionForm from './Admin/HomepageSectionForm'
+import HomepageCard from './Admin/HomepageCard'
 import AdminHome from './Admin/AdminHome'
 import SignupPage from './Components/Signup/SignupPage'
 import Login from './Components/Signin/Login'
@@ -36,6 +37,7 @@ const Routers = () => {
   <Route path="/event" element={<Events />} />
   <Route path="/booking/:id" element={<Booking />} />
   <Route path="/HomepageSectionForm" element={<HomepageSectionForm />} />
+  <Route path="/HomepageCard" element={<HomepageCard />} />
   <Route path="/events-registration" element={<EventRegistration />} />
   {/* <Route path="/flagship" element={<FlagshipEventsPage />} /> */}
   <Route path="/about" element={<About />} />

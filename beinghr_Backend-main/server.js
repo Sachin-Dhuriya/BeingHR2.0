@@ -108,6 +108,9 @@ app.use('/api',contactRoute)
 //--------------------------------------HomePage Container------------------------------------------------
 const homepageContainer = require('./routes/homepageContainer.js')
 app.use('/api',homepageContainer)
+
+const homepagCard= require('./routes/homeCard.js')
+app.use('/api/admin',homepagCard)
 //-------------------------------------Event Registration Form Route----------------------------------------------
 app.post("/eventregistration", async (req, res) => {
     try {
@@ -248,7 +251,7 @@ app.get("/check-admin",async (req, res) => {
     }
   });
 
-  //---------------------------------------Home Page Admin Route--------------------------------------------
+  //---------------------------------------Home Page Card Admin Route--------------------------------------------
 
 //--------------------------------------Listening Port----------------------------------------------------------------
 const PORT = process.env.PORT || 5000;

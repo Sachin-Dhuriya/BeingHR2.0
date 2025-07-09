@@ -28,6 +28,11 @@ const cards = [
     title: "HomePage Container",
     description: "Handle the Homepage container from here",
     link: "/HomepageSectionForm"
+  },
+  {
+    title: "HomePage Cards",
+    description: "Handle the Homepage Cards from here",
+    link: "/HomepageCard"
   }
 ];
 
