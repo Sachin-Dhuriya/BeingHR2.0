@@ -20,6 +20,7 @@ import EventRegistration from './Admin/EventRegistration'
 import EventHosting from './Admin/EventHosting'
 import EventDetails from './Components/Allevents/EventDetails'
 import Profile from './Components/Profile/Profile'
+import VoiceCard from './Admin/VoiceCard'
 // import HRConclaveGrid from './Components/homeScreen/HRConclaveGrid's
 const Routers = () => {
   
@@ -38,6 +39,7 @@ const Routers = () => {
   <Route path="/booking/:id" element={<Booking />} />
   <Route path="/HomepageSectionForm" element={<HomepageSectionForm />} />
   <Route path="/HomepageCard" element={<HomepageCard />} />
+  <Route path="/VoiceCard" element={<VoiceCard />} />
   <Route path="/events-registration" element={<EventRegistration />} />
   {/* <Route path="/flagship" element={<FlagshipEventsPage />} /> */}
   <Route path="/about" element={<About />} />

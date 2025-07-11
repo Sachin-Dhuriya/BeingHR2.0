@@ -6,48 +6,13 @@ import { Link } from 'react-router-dom';
 import { FaLinkedin, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
 import HRConclaveGrid from '../../HomeScreen/HRConclaveGrid';
 
-const testimonials = [
-  {
-    name: "Pawan Chandra",
-    position: "Pidilite Industries",
-    feedback: "Very well organised. Time management is brilliant. Time spent well.",
-    rating: 5,
-    image: "https://via.placeholder.com/60",
-  },
-  {
-    name: "Ruhan Saldanha",
-    position: "Kaizen",
-    feedback: "We are delighted to have been a part of the 4th CFO-Confex & Awards 2024 – Mumbai Chapter. The event was a resounding success.",
-    rating: 5,
-    image: "https://via.placeholder.com/60",
-  },
-  {
-    name: "Mellacheruvu Kalyan Ram",
-    position: "Focus Softnet",
-    feedback: "I would like to extend my appreciation to Mr. Naved of Gainskills Media for coordinating the recently concluded CX.",
-    rating: 5,
-    image: "https://via.placeholder.com/60",
-  },
-  {
-    name: "John Doe",
-    position: "Company X",
-    feedback: "An amazing experience, well organized and insightful discussions.",
-    rating: 4,
-    image: "https://via.placeholder.com/60",
-  },
-  {
-    name: "Jane Smith",
-    position: "Company Y",
-    feedback: "A well-coordinated event with fantastic networking opportunities.",
-    rating: 5,
-    image: "https://via.placeholder.com/60",
-  },
-];
-
 function Home() {
   const [mongoEvents, setMongoEvents] = useState([]);
   const [expertiseAreas, setExpertiseAreas] = useState([]);
   const [popupData, setPopupData] = useState(null);
+  const [voiceCards, setVoiceCards] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsToShow, setItemsToShow] = useState(3);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -68,12 +33,19 @@ function Home() {
       }
     };
 
+    const fetchVoiceCards = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/admin/voicecard");
+        setVoiceCards(res.data);
+      } catch (error) {
+        console.error("Error fetching voice cards:", error);
+      }
+    };
+
     fetchEvents();
     fetchExpertise();
+    fetchVoiceCards();
   }, []);
-
-  const [startIndex, setStartIndex] = useState(0);
-  const [itemsToShow, setItemsToShow] = useState(3);
 
   useEffect(() => {
     const updateItemsToShow = () => {
@@ -89,13 +61,13 @@ function Home() {
     return () => window.removeEventListener("resize", updateItemsToShow);
   }, []);
 
-  const nextTestimonial = () => {
-    setStartIndex((prev) => (prev + 1) % testimonials.length);
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStartIndex((prev) => (prev + 1) % voiceCards.length);
+    }, 3000); // slide every 4 seconds
 
-  const prevTestimonial = () => {
-    setStartIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+    return () => clearInterval(interval);
+  }, [voiceCards.length]);
 
   const openPopup = (data) => {
     setPopupData(data);
@@ -138,14 +110,9 @@ function Home() {
 
         <div className="expertise-carousel-wrapper">
           <button className="scroll-btn left" onClick={() => scrollExpertise('left')}>←</button>
-
           <div className="expertise-carousel" id="expertise-carousel">
             {expertiseAreas.map((area, index) => (
-              <div
-                key={index}
-                className="expertise-card"
-                onClick={() => openPopup(area)}
-              >
+              <div key={index} className="expertise-card" onClick={() => openPopup(area)}>
                 <img src={area.image} alt={area.title} className="expertise-image" />
                 <div className="expertise-content">
                   <h3 className="expertise-card-title">{area.title}</h3>
@@ -153,7 +120,6 @@ function Home() {
               </div>
             ))}
           </div>
-
           <button className="scroll-btn right" onClick={() => scrollExpertise('right')}>→</button>
         </div>
 
@@ -194,23 +160,36 @@ function Home() {
         <div className="testimonials-container">
           <h2 className="testimonials-title">Voices from Our Community</h2>
           <div className="testimonials-wrapper">
-            <button className="arrow-button" onClick={prevTestimonial}>←</button>
-            <div className="testimonial-cards">
-              {testimonials.slice(startIndex, startIndex + itemsToShow).map((testimonial, index) => (
-                <div key={index} className="testimonial-card">
-                  <div className="profile-section">
-                    <img src={testimonial.image} alt={testimonial.name} className="profile-image" />
-                    <div className="profile-info">
-                      <h3>{testimonial.name}</h3>
-                      <p>{testimonial.position}</p>
+            <motion.div
+              key={startIndex} // triggers animation
+              className="testimonial-cards"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}
+            >
+              {(() => {
+                const visibleTestimonials = [];
+                for (let i = 0; i < itemsToShow; i++) {
+                  const index = (startIndex + i) % voiceCards.length;
+                  visibleTestimonials.push(voiceCards[index]);
+                }
+                return visibleTestimonials
+                  .filter(testimonial => testimonial && testimonial.image)
+                  .map((testimonial, index) => (
+                    <div key={index} className="testimonial-card">
+                      <div className="profile-section">
+                        <img src={testimonial.image} alt={testimonial.name || "Profile"} className="profile-image" />
+                        <div className="profile-info">
+                          <h3>{testimonial.name || "Anonymous"}</h3>
+                          <p>{testimonial.designation || "Member"} | {testimonial.companyName || ""}</p>
+                        </div>
+                      </div>
+                      <p className="feedback">{testimonial.content || ""}</p>
                     </div>
-                  </div>
-                  <div className="rating">{"⭐".repeat(testimonial.rating)}</div>
-                  <p className="feedback">{testimonial.feedback}</p>
-                </div>
-              ))}
-            </div>
-            <button className="arrow-button" onClick={nextTestimonial}>→</button>
+                  ));
+
+              })()}
+            </motion.div>
           </div>
         </div>
       </motion.div>

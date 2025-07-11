@@ -108,9 +108,12 @@ app.use('/api',contactRoute)
 //--------------------------------------HomePage Container------------------------------------------------
 const homepageContainer = require('./routes/homepageContainer.js')
 app.use('/api',homepageContainer)
-
+//--------------------------------------Home Card------------------------------------------------
 const homepagCard= require('./routes/homeCard.js')
 app.use('/api/admin',homepagCard)
+//--------------------------------------Voice Cards------------------------------------------------
+const voiceCardRoutes = require('./routes/voiceCardRoutes.js') 
+app.use('/api/admin', voiceCardRoutes);
 //-------------------------------------Event Registration Form Route----------------------------------------------
 app.post("/eventregistration", async (req, res) => {
     try {

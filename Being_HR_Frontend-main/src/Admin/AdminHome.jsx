@@ -33,6 +33,11 @@ const cards = [
     title: "HomePage Cards",
     description: "Handle the Homepage Cards from here",
     link: "/HomepageCard"
+  },
+  {
+    title: "Voice Cards",
+    description: "Handle the Homepage Voice Cards from here",
+    link: "/VoiceCard"
   }
 ];
 
