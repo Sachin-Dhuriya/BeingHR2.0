@@ -120,21 +120,58 @@ app.use('/api/admin',blogRoutes)
 //-------------------------------------Event Registration Form Route----------------------------------------------
 app.post("/eventregistration", async (req, res) => {
     try {
+        console.log(req.body);
         if (!req.user) {
             return res.status(401).json({ message: "Unauthorized. Please log in." });
         }
 
-        const { name, email, phone, age, eventName, eventId } = req.body;
+        const {
+            name,
+            designation,
+            organisation,
+            officialEmail,
+            phone,
+            location,
+            linkedinUrl,
+            eventName,
+            eventId
+        } = req.body;
 
-        // Check if the user has already registered for this event
-        const existingRegistration = await eventRegForm.findOne({ email, eventName });
+        // Check if already registered
+        const existingRegistration = await eventRegForm.findOne({ officialEmail, eventName });
         if (existingRegistration) {
-            return res.status(400).json({ success: false, message: "You have already registered for this event." });
+            return res.status(400).json({ message: "You have already registered for this event." });
         }
 
-        // Save registration
-        let eventReg = new eventRegForm({ name, eventName, email, phone, age });
+        // Save to eventRegForm
+        const eventReg = new eventRegForm({
+            name,
+            designation,
+            organisation,
+            officialEmail,
+            phone,
+            location,
+            linkedinUrl,
+            eventName,
+            email: req.body.email
+        });
         await eventReg.save();
+
+        // Add to event's registrations array
+        const event = await createEvent.findById(eventId);
+        if (event) {
+            event.registrations.push({
+                name,
+                designation,
+                organisation,
+                email: req.user.email,  // make sure 'email' exists on req.user
+                officialEmail,
+                phone,
+                location,
+                linkedinUrl,
+            });
+            await event.save();
+        }
 
         // Add event to user's registeredEvents array
         const user = await User.findById(req.user._id);
@@ -144,20 +181,18 @@ app.post("/eventregistration", async (req, res) => {
         }
 
         // Send confirmation email
-        await sendConfirmationEmail(email, name, eventName);
+        await sendConfirmationEmail(req.user.email, name, eventName);
 
-        res.json({ success: true, message: "Registered for the event successfully!" });
+        return res.status(200).json({ message: "Registered for the event successfully!" });
 
     } catch (err) {
         console.error("Error in registration:", err);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error. Please try again later." });
     }
 });
 
-
-
 app.get("/eventregistration", async (req, res) => {
-    try {
+    try {   
         let registrationDetails = await eventRegForm.find();
         res.json(registrationDetails);
     } catch (error) {

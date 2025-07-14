@@ -80,3 +80,21 @@
     }
   }
   
+  .filter-buttons {
+  margin-bottom: 1rem;
+}
+
+.filter-buttons button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  border: 1px solid #007bff;
+  background-color: white;
+  color: #007bff;
+  border-radius: 4px;
+}
+
+.filter-buttons button.active {
+  background-color: #007bff;
+  color: white;
+}

@@ -12,7 +12,11 @@ const Booking = () => {
     name: "",
     phone: "",
     email: "",
-    age: "",
+    officialEmail: "",
+    designation: "",
+    organisation: "",
+    location: "",
+    linkedin: "",
     eventName: ""
   });
 
@@ -36,9 +40,8 @@ const Booking = () => {
         setFormData((prev) => ({
           ...prev,
           name: res.data.name || "",
-          email: res.data.email || "",
+          email: res.data.email || "" // Prefill personal email with user's email
         }));
-        
         if (res.data.registeredEvents.includes(id)) {
           setIsRegistered(true);
         }
@@ -62,7 +65,7 @@ const Booking = () => {
     switch (name) {
       case "name":
         if (!/^[a-zA-Z\s]{3,}$/.test(value)) {
-          errorMsg = "Name should be at least 3 characters long and contain only letters and spaces.";
+          errorMsg = "Name should be at least 3 characters and contain only letters and spaces.";
         }
         break;
       case "phone":
@@ -71,40 +74,49 @@ const Booking = () => {
         }
         break;
       case "email":
-        if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
+      case "officialEmail":
+        if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)) {
           errorMsg = "Please enter a valid email address.";
         }
         break;
       case "age":
-        if (value < 18 || value > 100) {
+        if (value && (value < 18 || value > 100)) {
           errorMsg = "Age must be between 18 and 100.";
+        }
+        break;
+      case "linkedin":
+        if (value && !/^https?:\/\/(www\.)?linkedin\.com\/.*$/.test(value)) {
+          errorMsg = "Please enter a valid LinkedIn URL.";
         }
         break;
       default:
         break;
     }
-    setErrors({ ...errors, [name]: errorMsg });
+    setErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (Object.values(errors).some((msg) => msg)) {
-      alert("Please fix the errors before submitting the form.");
+      alert("Please fix the errors before submitting.");
       return;
     }
-
     try {
-      const response = await axios.post("http://localhost:5000/eventregistration", 
-        { ...formData, eventId: id }, 
-        { withCredentials: true }
-      );
-      console.log("Registration successful:", response.data);
-      alert("Registration successful!");
-      setIsRegistered(true);
-    } catch (error) {
-      console.error("Error submitting the form:", error);
-      alert(error.response?.data?.message || "Failed to register. Please try again.");
-    }
+  const response = await axios.post(
+    `${import.meta.env.VITE_API_BASE_URL}/eventregistration`,
+    { ...formData, eventId: id },
+    { withCredentials: true }
+  );
+  console.log("Registration successful:", response.data);
+  // Use backend message if available, fallback to default
+  alert(response.data?.message || "Registration successful!");
+  setIsRegistered(true);
+} catch (error) {
+  console.error("Error submitting the form:", error);
+  // Use backend error message if available, else fallback
+  alert(error.response?.data?.message || "Something went wrong while registering. Please try again.");
+}
+
   };
 
   if (!eventData) return <p>Loading event details...</p>;
@@ -119,26 +131,104 @@ const Booking = () => {
         <form onSubmit={handleSubmit}>
           <div className="f-form-field">
             <label htmlFor="name">Full Name</label>
-            <input type="text" id="name" name="name" value={formData.name} onChange={handleInputChange} className="input-field" required readOnly={!!user} />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              readOnly={!!user}
+            />
             {errors.name && <span className="error-msg">{errors.name}</span>}
           </div>
 
           <div className="f-form-field">
-            <label htmlFor="phone">Contact Number</label>
-            <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className="input-field" required />
-            {errors.phone && <span className="error-msg">{errors.phone}</span>}
+            <label htmlFor="designation">Designation</label>
+            <input
+              type="text"
+              id="designation"
+              name="designation"
+              value={formData.designation}
+              onChange={handleInputChange}
+              required
+            />
           </div>
 
           <div className="f-form-field">
-            <label htmlFor="email">Email Address</label>
-            <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} className="input-field" required readOnly={!!user} />
+            <label htmlFor="organisation">Organisation</label>
+            <input
+              type="text"
+              id="organisation"
+              name="organisation"
+              value={formData.organisation}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="f-form-field">
+            <label htmlFor="email">Personal Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              readOnly={!!user}
+            />
             {errors.email && <span className="error-msg">{errors.email}</span>}
           </div>
 
           <div className="f-form-field">
-            <label htmlFor="age">Age</label>
-            <input type="number" id="age" name="age" value={formData.age} onChange={handleInputChange} className="input-field" required />
-            {errors.age && <span className="error-msg">{errors.age}</span>}
+            <label htmlFor="officialEmail">Official Email</label>
+            <input
+              type="email"
+              id="officialEmail"
+              name="officialEmail"
+              value={formData.officialEmail}
+              onChange={handleInputChange}
+              required
+            />
+            {errors.officialEmail && <span className="error-msg">{errors.officialEmail}</span>}
+          </div>
+
+          <div className="f-form-field">
+            <label htmlFor="phone">Contact Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+            />
+            {errors.phone && <span className="error-msg">{errors.phone}</span>}
+          </div>
+
+          <div className="f-form-field">
+            <label htmlFor="location">Location</label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="f-form-field">
+            <label htmlFor="linkedin">LinkedIn URL</label>
+            <input
+              type="url"
+              id="linkedin"
+              name="linkedin"
+              value={formData.linkedin}
+              onChange={handleInputChange}
+            />
+            {errors.linkedin && <span className="error-msg">{errors.linkedin}</span>}
           </div>
 
           <input type="hidden" name="eventName" value={formData.eventName} />

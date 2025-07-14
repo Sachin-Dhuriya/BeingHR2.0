@@ -5,6 +5,7 @@ import './DashBoard.css';
 const DashBoard = () => {
   const [eventRegistrations, setEventRegistrations] = useState([]);
   const [adminLoading, setAdminLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState('All'); // default to 'All'
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,14 +14,12 @@ const DashBoard = () => {
         const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
 
         if (res.status === 401) {
-          // Not logged in
           navigate('/login');
           return;
         }
 
         const data = await res.json();
         if (!data.isAdmin) {
-          // Logged in but not admin
           navigate('/');
         }
       } catch (error) {
@@ -45,7 +44,7 @@ const DashBoard = () => {
           console.error('Error fetching event registrations:', error);
         }
       };
-      
+
       fetchEventRegistrations();
     }
   }, [adminLoading]);
@@ -54,29 +53,65 @@ const DashBoard = () => {
     return <div>Loading...</div>;
   }
 
+  // Get unique event names from registrations
+  const uniqueEvents = Array.from(new Set(eventRegistrations.map(reg => reg.eventName)));
+
+  // Filtered registrations based on selected event
+  const filteredRegistrations = selectedEvent === 'All'
+    ? eventRegistrations
+    : eventRegistrations.filter(reg => reg.eventName === selectedEvent);
+
   return (
     <div className="admin-page">
       <h1>Registration List</h1>
+
+      {/* Filter Buttons */}
+      <div className="filter-buttons">
+        <button
+          className={selectedEvent === 'All' ? 'active' : ''}
+          onClick={() => setSelectedEvent('All')}
+        >
+          All Events
+        </button>
+        {uniqueEvents.map(eventName => (
+          <button
+            key={eventName}
+            className={selectedEvent === eventName ? 'active' : ''}
+            onClick={() => setSelectedEvent(eventName)}
+          >
+            {eventName}
+          </button>
+        ))}
+      </div>
+
       <table className="user-table">
         <thead>
           <tr>
             <th>Sr No</th>
             <th>Name</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Age</th>
+            <th>Personal Email</th>
+            <th>Official Email</th>
+            <th>Phone</th>
+            <th>Designation</th>
+            <th>Organisation</th>
+            <th>Location</th>
             <th>Event Name</th>
+            <th>Registered At</th>
           </tr>
         </thead>
         <tbody>
-          {eventRegistrations.map((user, index) => (
+          {filteredRegistrations.map((user, index) => (
             <tr key={user._id || index}>
               <td>{index + 1}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
+              <td>{user.officialEmail}</td>
               <td>{user.phone}</td>
-              <td>{user.age}</td>
+              <td>{user.designation}</td>
+              <td>{user.organisation}</td>
+              <td>{user.location}</td>
               <td>{user.eventName}</td>
+              <td>{new Date(user.registeredAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
