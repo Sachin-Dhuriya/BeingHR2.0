@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './HomepageCard.css';
 
 const HomepageCard = () => {
@@ -10,10 +11,36 @@ const HomepageCard = () => {
   const [message, setMessage] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true); // admin check loading
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        if (res.status === 401) {
+          navigate('/login'); // not logged in
+          return;
+        }
+        const data = await res.json();
+        if (!data.isAdmin) {
+          navigate('/'); // logged in but not admin
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAdmin();
+  }, [navigate]);
 
   const fetchCards = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/cards');
+      const res = await axios.get('http://localhost:5000/api/admin/cards', { withCredentials: true });
       setCards(res.data);
     } catch (err) {
       console.error(err);
@@ -22,8 +49,10 @@ const HomepageCard = () => {
   };
 
   useEffect(() => {
-    fetchCards();
-  }, []);
+    if (!loading) {
+      fetchCards();
+    }
+  }, [loading]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,10 +83,10 @@ const HomepageCard = () => {
 
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/api/admin/cards/${editId}`, form);
+        await axios.put(`http://localhost:5000/api/admin/cards/${editId}`, form, { withCredentials: true });
         setMessage('Card updated!');
       } else {
-        await axios.post('http://localhost:5000/api/admin/cards', form);
+        await axios.post('http://localhost:5000/api/admin/cards', form, { withCredentials: true });
         setMessage('Card created!');
       }
 
@@ -82,7 +111,7 @@ const HomepageCard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/cards/${id}`);
+      await axios.delete(`http://localhost:5000/api/admin/cards/${id}`, { withCredentials: true });
       setMessage('Card deleted.');
       fetchCards();
     } catch (err) {
@@ -90,6 +119,10 @@ const HomepageCard = () => {
       setMessage("Failed to delete card.");
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="card-form-container">
@@ -144,7 +177,6 @@ const HomepageCard = () => {
                 <tr key={card._id}>
                   <td><img src={card.image} alt={card.title} style={{ width: '100px' }} /></td>
                   <td>{card.title}</td>
-                  {/* Preserve line breaks and emojis */}
                   <td style={{ whiteSpace: 'pre-wrap' }}>{card.content}</td>
                   <td>
                     <button onClick={() => handleEdit(card)}>Edit</button>

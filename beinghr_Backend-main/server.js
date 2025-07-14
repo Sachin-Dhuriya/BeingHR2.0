@@ -238,14 +238,18 @@ app.post("/register-event", async (req, res) => {
 });
 
 //--------------------------------------Check Admin----------------------------------------------------------------
-app.get("/check-admin",async (req, res) => {
-    try {
-      const user = await User.findById(req.user._id);
-      res.json({ isAdmin: user?.isAdmin || false });
-    } catch (error) {
-      res.status(500).json({ error: "Internal Server Error" });
+app.get("/check-admin", async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Not logged in" });
     }
-  });
+    const user = await User.findById(req.user._id);
+    res.json({ isAdmin: user?.isAdmin || false });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
 //--------------------------------------auth status----------------------------------------------------------------

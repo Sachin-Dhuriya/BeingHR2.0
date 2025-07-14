@@ -1,17 +1,45 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashBoard.css';
 
 const DashBoard = () => {
-  // State to hold the user queries fetched from the backend
   const [userQueries, setUserQueries] = useState([]);
+  const [adminLoading, setAdminLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch user queries from the backend when the component mounts
+  // Check admin status on mount
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/form`) // Update the URL if needed
-      .then(response => response.json())
-      .then(data => setUserQueries(data))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []); // Empty array ensures the effect runs only once when the component mounts
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.isAdmin) {
+          navigate('/'); // redirect if not admin
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+        navigate('/'); // redirect on error
+      } finally {
+        setAdminLoading(false);
+      }
+    };
+
+    checkAdmin();
+  }, [navigate]);
+
+  // Fetch user queries once admin check passes
+  useEffect(() => {
+    if (!adminLoading) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contact/form`)
+        .then(response => response.json())
+        .then(data => setUserQueries(data))
+        .catch(error => console.error('Error fetching data:', error));
+    }
+  }, [adminLoading]);
+
+  if (adminLoading) {
+    return <div>Loading...</div>; // loading indicator while checking admin
+  }
 
   return (
     <div className="admin-page">
@@ -19,7 +47,7 @@ const DashBoard = () => {
       <table className="user-table">
         <thead>
           <tr>
-            <th>Sr No</th> {/* Column name changed to Sr No */}
+            <th>Sr No</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone Number</th>
@@ -28,8 +56,8 @@ const DashBoard = () => {
         </thead>
         <tbody>
           {userQueries.map((user, index) => (
-            <tr key={user._id}> {/* Use _id as the unique key */}
-              <td>{index + 1}</td> {/* Sr No is the index + 1 */}
+            <tr key={user._id}>
+              <td>{index + 1}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>

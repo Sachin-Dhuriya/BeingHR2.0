@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./EventHosting.css";
 import TextEditor from "./TextEditor";
 
@@ -19,7 +20,27 @@ function EventHosting() {
     });
 
     const [loading, setLoading] = useState(false);
+    const [adminLoading, setAdminLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkAdmin = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/check-admin', { withCredentials: true });
+                if (!res.data.isAdmin) {
+                    navigate('/'); // redirect if not admin
+                }
+            } catch (error) {
+                console.error('Error checking admin:', error);
+                navigate('/'); // redirect on error
+            } finally {
+                setAdminLoading(false);
+            }
+        };
+
+        checkAdmin();
+    }, [navigate]);
 
     const handleChange = (e) => {
         setEvent({ ...event, [e.target.name]: e.target.value });
@@ -72,6 +93,10 @@ function EventHosting() {
         }
     };
 
+    if (adminLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="event-container">
             <h5 className="Host-event-heading">Add New Event</h5>
@@ -86,7 +111,6 @@ function EventHosting() {
                     onChange={handleChange}
                     required
                 />
-
                 <input
                     type="date"
                     name="date"
@@ -163,11 +187,12 @@ function EventHosting() {
                     className="event-input"
                     onChange={handleImageChange}
                 />
+                {/* TextEditor component with onChange handler */}
+                <TextEditor onChange={handleDescriptionChange} />
+
                 <button type="submit" className="event-button" disabled={loading}>
                     {loading ? "Adding Event..." : "Add Event"}
                 </button>
-                 {/* TextEditor component with onChange handler */}
-                 <TextEditor onChange={handleDescriptionChange} />
             </form>
         </div>
     );

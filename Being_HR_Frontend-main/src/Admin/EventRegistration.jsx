@@ -1,24 +1,58 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashBoard.css';
 
 const DashBoard = () => {
-  // State to store event registration data
   const [eventRegistrations, setEventRegistrations] = useState([]);
+  const [adminLoading, setAdminLoading] = useState(true);
+  const navigate = useNavigate();
 
-  // Fetch event registrations from the backend
   useEffect(() => {
-    const fetchEventRegistrations = async () => {
+    const checkAdmin = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/eventregistration`);
-        const data = await response.json();
-        setEventRegistrations(data);
+        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+
+        if (res.status === 401) {
+          // Not logged in
+          navigate('/login');
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.isAdmin) {
+          // Logged in but not admin
+          navigate('/');
+        }
       } catch (error) {
-        console.error('Error fetching event registrations:', error);
+        console.error('Error checking admin:', error);
+        navigate('/');
+      } finally {
+        setAdminLoading(false);
       }
     };
-    
-    fetchEventRegistrations();
-  }, []);
+
+    checkAdmin();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!adminLoading) {
+      const fetchEventRegistrations = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/eventregistration`, { credentials: 'include' });
+          const data = await response.json();
+          setEventRegistrations(data);
+        } catch (error) {
+          console.error('Error fetching event registrations:', error);
+        }
+      };
+      
+      fetchEventRegistrations();
+    }
+  }, [adminLoading]);
+
+  if (adminLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="admin-page">
@@ -36,8 +70,8 @@ const DashBoard = () => {
         </thead>
         <tbody>
           {eventRegistrations.map((user, index) => (
-            <tr key={user._id || index}> {/* Using _id or index as key */}
-              <td>{index + 1}</td> {/* Display index as ID */}
+            <tr key={user._id || index}>
+              <td>{index + 1}</td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>

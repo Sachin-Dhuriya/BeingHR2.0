@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './HomepageSectionForm.css';
 
 const HomepageSectionForm = () => {
@@ -7,16 +8,45 @@ const HomepageSectionForm = () => {
   const [content, setContent] = useState('');
   const [images, setImages] = useState([]);
   const [message, setMessage] = useState('');
-  const [homepageData, setHomepageData] = useState(null); // 🔥 For fetched data
+  const [homepageData, setHomepageData] = useState(null);
+  const [loading, setLoading] = useState(true); // admin check loading
+  const navigate = useNavigate();
 
-  // 🔽 Fetch data on load
   useEffect(() => {
-    fetchHomepageSection();
-  }, []);
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+
+        if (res.status === 401) {
+          navigate('/login'); // Not logged in
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.isAdmin) {
+          navigate('/'); // Logged in but not admin
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAdmin();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!loading) {
+      fetchHomepageSection();
+    }
+  }, [loading]);
 
   const fetchHomepageSection = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/homepage-section');
+      const response = await axios.get('http://localhost:5000/api/admin/homepage-section', { withCredentials: true });
       setHomepageData(response.data.homepageSection);
     } catch (error) {
       console.error('Error fetching homepage section:', error.message);
@@ -48,11 +78,12 @@ const HomepageSectionForm = () => {
     });
 
     try {
-      const response = await axios.post(
+      await axios.post(
         'http://localhost:5000/api/admin/homepage-section',
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true
         }
       );
 
@@ -60,12 +91,16 @@ const HomepageSectionForm = () => {
       setTitle('');
       setContent('');
       setImages([]);
-      fetchHomepageSection(); // ⬅ Refresh UI
+      fetchHomepageSection();
     } catch (error) {
       console.error('Error uploading:', error);
       setMessage('Upload failed. Please check the console.');
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="homepage-form-container">

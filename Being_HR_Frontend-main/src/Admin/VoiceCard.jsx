@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './VoiceCard.css';
 
 const VoiceCardForm = () => {
@@ -11,15 +12,42 @@ const VoiceCardForm = () => {
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState('');
   const [cards, setCards] = useState([]);
-  const [editingId, setEditingId] = useState(null); // track edit mode
+  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true); // admin check loading
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchVoiceCards();
-  }, []);
+    const checkAdmin = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        if (res.status === 401) {
+          navigate('/login'); // Not logged in
+          return;
+        }
+        const data = await res.json();
+        if (!data.isAdmin) {
+          navigate('/'); // Not admin
+          return;
+        }
+      } catch (error) {
+        console.error('Error checking admin:', error);
+        navigate('/');
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkAdmin();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!loading) {
+      fetchVoiceCards();
+    }
+  }, [loading]);
 
   const fetchVoiceCards = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/voicecard');
+      const res = await fetch('http://localhost:5000/api/admin/voicecard', { credentials: 'include' });
       const data = await res.json();
       setCards(data);
     } catch (error) {
@@ -56,21 +84,21 @@ const VoiceCardForm = () => {
     try {
       let res, data;
       if (editingId) {
-        // update mode
         res = await fetch(`http://localhost:5000/api/admin/voicecard/${editingId}`, {
           method: 'PUT',
-          body: form
+          body: form,
+          credentials: 'include'
         });
         data = await res.json();
       } else {
-        // create mode
         if (!image) {
           setMessage("Please upload an image.");
           return;
         }
         res = await fetch('http://localhost:5000/api/admin/voicecard', {
           method: 'POST',
-          body: form
+          body: form,
+          credentials: 'include'
         });
         data = await res.json();
       }
@@ -79,7 +107,7 @@ const VoiceCardForm = () => {
         setMessage(data.message);
         setFormData({ name: '', designation: '', companyName: '', content: '' });
         setImage(null);
-        setEditingId(null); // reset edit mode
+        setEditingId(null);
         fetchVoiceCards();
       } else {
         setMessage(data.message || "Something went wrong.");
@@ -94,7 +122,8 @@ const VoiceCardForm = () => {
     if (!window.confirm('Are you sure you want to delete this voice card?')) return;
     try {
       const res = await fetch(`http://localhost:5000/api/admin/voicecard/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include'
       });
       const data = await res.json();
       if (res.ok) {
@@ -119,6 +148,10 @@ const VoiceCardForm = () => {
     setEditingId(card._id);
     setMessage("Edit mode: update fields and submit to modify.");
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="voice-card-form">

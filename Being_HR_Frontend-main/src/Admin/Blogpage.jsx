@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Blogpage.css';
-
 
 // Helper: strip HTML tags if content has HTML
 const stripHtml = (html) => {
@@ -13,10 +13,28 @@ const stripHtml = (html) => {
 const Blogpage = () => {
     const [blogs, setBlogs] = useState([]);
     const [selectedBlog, setSelectedBlog] = useState(null); // for modal
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetchBlogs();
-    }, []);
+        const checkAdmin = async () => {
+            try {
+                const res = await axios.get('http://localhost:5000/check-admin', { withCredentials: true });
+                if (!res.data.isAdmin) {
+                    navigate('/'); // redirect if not admin
+                } else {
+                    fetchBlogs();
+                }
+            } catch (error) {
+                console.error('Error checking admin:', error);
+                navigate('/'); // redirect on error
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkAdmin();
+    }, [navigate]);
 
     const fetchBlogs = async () => {
         try {
@@ -55,6 +73,10 @@ const Blogpage = () => {
         const date = new Date(dateStr);
         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="admin-blogs">
