@@ -1,0 +1,159 @@
+/* Container */
+.blog-reading-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+/* Title & meta */
+.blog-reading-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.blog-reading-meta {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+/* Blog content */
+.blog-reading-content {
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+/* Like section */
+.blog-like-section {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.like-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.like-button:disabled {
+  background-color: white;
+  cursor: not-allowed;
+}
+
+.like-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.like-count {
+  font-size: 0.95rem;
+  color: white;
+}
+
+.like-error {
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+/* Comments section */
+.blog-comments-section {
+  margin-top: 2rem;
+}
+
+.blog-comments-section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.blog-comments-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.blog-comments-section li {
+  border-bottom: 1px solid #eee;
+  padding: 0.6rem 0;
+}
+
+.blog-comments-section li p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.blog-comments-section li small {
+  color: #777;
+  font-size: 0.8rem;
+}
+
+/* Add comment form */
+.add-comment-form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background-color: #fff;      /* Ensure background is white */
+  color: #333;   
+}
+
+.add-comment-form textarea {
+  resize: vertical;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-comment-form button {
+  align-self: flex-start;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-comment-form button:disabled {
+  background-color: #9ddbb0;
+  cursor: not-allowed;
+}
+
+.add-comment-form button:hover:not(:disabled) {
+  background-color: #1e7e34;
+}
+
+.current-user-name {
+  font-size: 0.9rem;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .blog-reading-container {
+    padding: 0.8rem;
+  }
+
+  .blog-reading-title {
+    font-size: 1.6rem;
+  }
+
+  .like-button, .add-comment-form button {
+    width: 100%;
+  }
+}

@@ -114,6 +114,9 @@ app.use('/api/admin',homepagCard)
 //--------------------------------------Voice Cards------------------------------------------------
 const voiceCardRoutes = require('./routes/voiceCardRoutes.js') 
 app.use('/api/admin', voiceCardRoutes);
+//--------------------------------------Blog Post------------------------------------------------
+const blogRoutes = require('./routes/blogRoutes');      
+app.use('/api/admin',blogRoutes)
 //-------------------------------------Event Registration Form Route----------------------------------------------
 app.post("/eventregistration", async (req, res) => {
     try {

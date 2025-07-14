@@ -1,85 +1,198 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import "./Blog.css";
 
 const Blog = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    author: "",
+  });
+  const [blogs, setBlogs] = useState([]); // state to hold blogs from API
+
+  const navigate = useNavigate();
+
+  // Fetch blogs on mount
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/admin/blog", { credentials: "include" });
+        if (res.ok) {
+          const data = await res.json();
+          // Filter only approved blogs
+          const approvedBlogs = data.filter(blog => blog.isApprove === true);
+          setBlogs(approvedBlogs);
+        } else {
+          console.error("Failed to fetch blogs");
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Check authentication status & get user name
+  useEffect(() => {
+    const checkAuthAndFetchUser = async () => {
+      try {
+        const authRes = await fetch("http://localhost:5000/auth-status", { credentials: "include" });
+        const authData = await authRes.json();
+
+        if (authData.isAuthenticated) {
+          setIsAuthenticated(true);
+          const userRes = await fetch("http://localhost:5000/user", { credentials: "include" });
+          if (userRes.ok) {
+            const userData = await userRes.json();
+            setFormData(prev => ({ ...prev, author: userData.name }));
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication or fetching user:", error);
+      }
+    };
+
+    checkAuthAndFetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      alert("You must be logged in to submit a blog.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/admin/blog", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify(formData)
+      });
+
+      if (res.ok) {
+        alert("Blog submitted successfully!");
+        setFormData({ title: "", content: "", author: formData.author });
+        setShowForm(false);
+
+        // Refresh blogs list after submitting
+        const updatedRes = await fetch("http://localhost:5000/api/admin/blog", { credentials: "include" });
+        if (updatedRes.ok) {
+          const updatedData = await updatedRes.json();
+          const approvedBlogs = updatedData.filter(blog => blog.isApprove === true);
+          setBlogs(approvedBlogs);
+        }
+
+      } else {
+        const data = await res.json();
+        alert(`Failed to submit blog: ${data.message || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error submitting blog:", error);
+      alert("An error occurred while submitting the blog.");
+    }
+  };
+
   return (
     <div className="BN-container">
-      <h1 className="BN-title">Blogs and News - BeingHR Community</h1>
+      <h1 className="BN-title">Blogs - BeingHR Community</h1>
       <p className="BN-subtitle">
-        The BeingHR Blog and Newsroom is your go-to destination for insightful articles, thought leadership, and the latest updates from the world of HR.
+        The BeingHR Blog is your go-to destination for insightful articles, thought leadership, and the latest updates from the world of HR.
       </p>
 
       {/* Blogs Section */}
       <section className="BN-section">
         <h2 className="BN-section-title">Blogs</h2>
         <div className="BN-grid">
-          {[{
-            title: "The Future of DEIB: Building Truly Inclusive Workplaces",
-            desc: "Discover strategies to create equitable, diverse, and inclusive work environments.",
-            date: "January 2025"
-          }, {
-            title: "HR Analytics: Unlocking Data-Driven Decision Making",
-            desc: "Learn how HR analytics can enhance recruitment, retention, and overall HR efficiency.",
-            date: "December 2024"
-          }, {
-            title: "The Rise of Employee Well-being: Beyond Traditional Benefits",
-            desc: "Explore innovative approaches to supporting employee mental health and well-being.",
-            date: "November 2024"
-          }, {
-            title: "AI in Recruitment: Transforming Talent Acquisition",
-            desc: "Understand how artificial intelligence is reshaping the hiring process for efficiency and fairness.",
-            date: "October 2024"
-          }].map((blog, index) => (
-            <div key={index} className="BN-card">
-              <h3 className="BN-card-title">{blog.title}</h3>
-              <p className="BN-card-desc">{blog.desc}</p>
-              <p className="BN-card-date">Published: {blog.date}</p>
-              <button className="BN-button">Read More</button>
-            </div>
-          ))}
-        </div>
-      </section>
+          {blogs.length > 0 ? (
+            blogs.map((blog) => (
+              <div key={blog._id} className="BN-card">
+                <h3 className="BN-card-title">{blog.title}</h3>
+                <div className="BN-card-desc" dangerouslySetInnerHTML={{ __html: blog.content }} />
+                <p className="BN-card-likes">👍 {blog.likes || 0} {blog.likes === 1 ? "Like" : "Likes"}</p>
+                <p className="BN-card-author">Author: {blog.author}</p>
+                <p className="BN-card-date">Published: {new Date(blog.date).toLocaleDateString()}</p>
+                <button
+                  className="BN-button"
+                  onClick={() => navigate(`/blog/${blog._id}`)}
+                >
+                  Read More
+                </button>
 
-      {/* News Section */}
-      <section className="BN-section">
-        <h2 className="BN-section-title">News</h2>
-        <div className="BN-grid">
-          {[{
-            title: "BeingHR Partners with CHRO Confex 2025",
-            desc: "We are excited to announce our collaboration with the prestigious CHRO Confex.",
-            date: "January 2025"
-          }, {
-            title: "Launch of the DEIB Walkathon in Bangalore",
-            desc: "Mark your calendars for May 1, 2025, for our first-ever walkathon.",
-            date: "December 2024"
-          }, {
-            title: "Mumbai HR Networking Night a Huge Success",
-            desc: "Over 500 HR professionals came together for a night of networking and collaboration.",
-            date: "November 2024"
-          }, {
-            title: "Introducing the BeingHR Digital Platform",
-            desc: "Seamlessly connect with HR professionals with our new digital platform launching June 2025.",
-            date: "December 2024"
-          }].map((news, index) => (
-            <div key={index} className="BN-card">
-              <h3 className="BN-card-title">{news.title}</h3>
-              <p className="BN-card-desc">{news.desc}</p>
-              <p className="BN-card-date">Date: {news.date}</p>
-              <button className="BN-button">Read Full Story</button>
-            </div>
-          ))}
+              </div>
+            ))
+          ) : (
+            <p>No approved blogs found.</p>
+          )}
         </div>
       </section>
 
       {/* Call to Action */}
       <div className="BN-cta">
-        <h3 className="BN-cta-title">Ready to Stay Informed and Inspired?</h3>
+        <h3 className="BN-cta-title">Ready to contribute in our blog</h3>
         <div className="BN-cta-buttons">
-          <button className="BN-button BN-button-blue">Read the Latest Blogs</button>
-          <button className="BN-button BN-button-green">Explore News Updates</button>
-          <button className="BN-button BN-button-purple">Contribute to Our Blog</button>
+          <button
+            className="BN-button BN-button-purple"
+            onClick={() => setShowForm(!showForm)}
+            disabled={!isAuthenticated}
+          >
+            {showForm ? "Close Form" : "Contribute to Our Blog"}
+          </button>
+          {!isAuthenticated && (
+            <p className="BN-auth-warning">* Please login to contribute.</p>
+          )}
         </div>
       </div>
+
+      {/* Blog Submission Form */}
+      {showForm && (
+        <form className="BN-form" onSubmit={handleSubmit}>
+          <h3 className="BN-form-title">Contribute Your Blog</h3>
+          <input
+            className="BN-form-input"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+          <ReactQuill
+            className="BN-form-textarea"
+            theme="snow"
+            value={formData.content}
+            onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+            placeholder="Write your blog content here..."
+          />
+
+          <input
+            className="BN-form-input"
+            name="author"
+            placeholder="Author Name"
+            value={formData.author}
+            readOnly
+          />
+          <button className="BN-button BN-button-purple" type="submit">
+            Submit Blog
+          </button>
+        </form>
+      )}
     </div>
   );
 };

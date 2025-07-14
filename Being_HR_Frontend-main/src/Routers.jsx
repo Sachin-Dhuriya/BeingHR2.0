@@ -21,6 +21,8 @@ import EventHosting from './Admin/EventHosting'
 import EventDetails from './Components/Allevents/EventDetails'
 import Profile from './Components/Profile/Profile'
 import VoiceCard from './Admin/VoiceCard'
+import Blogpage from './Admin/Blogpage'
+import BlogReadingPage from "./Components/Blog/BlogReadingPage";
 // import HRConclaveGrid from './Components/homeScreen/HRConclaveGrid's
 const Routers = () => {
   
@@ -40,10 +42,12 @@ const Routers = () => {
   <Route path="/HomepageSectionForm" element={<HomepageSectionForm />} />
   <Route path="/HomepageCard" element={<HomepageCard />} />
   <Route path="/VoiceCard" element={<VoiceCard />} />
+  <Route path="/Blogpage" element={<Blogpage />} />
   <Route path="/events-registration" element={<EventRegistration />} />
   {/* <Route path="/flagship" element={<FlagshipEventsPage />} /> */}
   <Route path="/about" element={<About />} />
   <Route path="/blog" element={<Blog />} />
+  <Route path="/blog/:id" element={<BlogReadingPage />} />
   <Route path="/contact" element={<Contact />} />
   <Route path="/signup" element={<SignupPage />} />
   <Route path="/login" element={<Login />} />

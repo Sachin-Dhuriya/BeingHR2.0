@@ -1,193 +1,252 @@
-/* General Styles */
+.aboutus-section {
+    background-color: #0c0c0c;
+    color: white;
+    padding: 80px 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
 
-  
-  h1, h2, h3 {
-    margin: 0;
-  }
-  
-  p {
-    margin: 0 0 1rem 0;
-  }
-  
-  /* Header Section */
-  .header {
-    background: linear-gradient(90deg, #4caf50, #388e3c);
-    color: #fff;
-    text-align: center;
-    padding: 40px 20px;
-  }
-  
-  .header-content {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .header .title {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .header .subtitle {
-    font-size: 18px;
-  }
-  
-  /* Main Container */
-  .main-container {
+.aboutus-content {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* Section Styles */
-  .section {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-    padding: 20px;
-    background-color: rgb(33, 33, 33);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .section:nth-child(even) {
-    flex-direction: row-reverse;
-  }
-  
-  .section-image {
-    width: 50%;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  
-  .content {
-    width: 45%;
-  }
-  
-  .content h2 {
-    color: #4caf50;
-    margin-bottom: 15px;
-    font-size: 24px;
-  }
-  
-  .content p {
-    font-size: 14px;
+    flex-direction: column;
+    gap: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.aboutus-text h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #ff69b4, #9b59b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.aboutus-text p {
+    color: #bbb;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.cta-button {
+    margin-top: 30px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    background: linear-gradient(to right, #ff69b4, #9b59b6);
     color: white;
-  }
-  
-  /* Services Section */
-  .services {
-    text-align: center;
-  }
-  
-  .services-grid {
-    display: flex;
-    flex-wrap: wrap;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  .section-title-about{
-    color: white;
-  }
-  
-  .service-card {
-    background-color: rgb(33, 33, 33);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 30%;
-    text-align: center;
-  }
-  
-  .service-card img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .service-card h3 {
-    color: #4caf50;
-    margin-bottom: 10px;
-  }
-  
-  .service-card p {
-    color: white;
-  }
-  
-  /* Call to Action Section */
-  .cta {
-    text-align: center;
-    padding: 40px;
-    background: linear-gradient(90deg, #4caf50, #388e3c);
-    color: #fff;
-    border-radius: 10px;
-  }
-  
-  .cta h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
-  
-  .cta p {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .cta .cta-button {
-    background-color: #fff;
-    color: #4caf50;
-    padding: 12px 25px;
-    font-size: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.cta-button:hover {
+    opacity: 0.9;
+}
+
+.glow-blob {
+    position: absolute;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle at center, #ff69f2, #4b6cff, transparent 70%);
+    filter: blur(100px);
+    opacity: 0.4;
+    z-index: 0;
+}
+
+.awards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.award h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.award p {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+
+/* Base styles */
+
+.marketing-hero {
+    background-color: #111;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.marketing-hero h1 {
+    font-size: 2.5rem;
     font-weight: bold;
-  }
-  
-  .cta .cta-button:hover {
-    background-color: #e8f5e9;
-  }
-  
-  /* Responsive Styles */
-  @media (max-width: 768px) {
-    .section {
-      flex-direction: column;
-      text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+.marketing-hero p {
+    font-size: 1.2rem;
+    color: #ccc;
+    margin-bottom: 40px;
+}
+
+.team-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+.team-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/* Departments */
+
+.departments-section {
+    background-color: #111;
+    color: white;
+    padding: 60px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.departments-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+}
+
+.departments-header h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.departments-header p {
+    color: #aaa;
+    font-size: 1rem;
+}
+
+
+/* Grid layout */
+
+.departments-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .departments-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
-  
-    .content,
-    .section-image {
-      width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .departments-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
-  }
-  
-  @media (max-width: 480px) {
-    .header{
-      padding: 10px ;
-    }
-    .service-card {
-      background-color: rgb(33, 33, 33);
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      width: 100%;
-      text-align: center;
-    }
-    .services-grid {
-      grid-template-columns: 1fr;
-    }
-    .header .title {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-    
-    .header .subtitle {
-      font-size: 12px;
-      text-align: left;
-    }
-  }
-  
+}
+
+
+/* Card styling */
+
+.department-card {
+    background-color: #1a1a1a;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 30px 24px;
+    min-height: 300px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+
+/* Hover effect for all cards */
+
+.department-card:hover {
+    transform: scale(1.03);
+    background: linear-gradient(to bottom right, #f5e6ff, #ffe6f1);
+    color: black;
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+
+/* Optional: Special first card style */
+
+.department-card:first-child {
+    /* If you want first card always styled */
+    /* background: linear-gradient(to bottom right, #f5e6ff, #ffe6f1); */
+    /* color: black; */
+    /* You can remove these lines if no special treatment is needed */
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 14px;
+}
+
+.head-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.head-role {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.head-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.department-button {
+    margin: 12px 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    background-color: transparent;
+    color: inherit;
+    border: 1px solid #666;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: default;
+}
+
+.department-description {
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.5;
+}
+
+.department-card:hover .department-description {
+    color: #333;
+}

@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 /*Just a comment*/
 .BN-container {
   width: 80%;
@@ -42,28 +43,40 @@ body {
   gap: 20px;
 }
 
+/* Modern card design */
 .BN-card {
-  background-color: #222;
+  background-color: #1e1e1e;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.BN-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
 }
 
 .BN-card-title {
-  font-size: 1.2em;
+  font-size: 1.3em;
   margin-bottom: 10px;
+  font-weight: 600;
+  color: #f1f1f1;
 }
 
 .BN-card-desc {
-  font-size: 1em;
-  margin-bottom: 10px;
+  font-size: 0.95em;
+  margin-bottom: 12px;
   color: #bbb;
+  flex: 1; /* allow description to take space */
 }
 
 .BN-card-date {
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: #888;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .BN-button {
@@ -71,15 +84,18 @@ body {
   color: white;
   padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
+  text-align: center;
+  font-weight: 500;
 }
 
 .BN-button:hover {
   background-color: #2eb532;
 }
 
+/* CTA section */
 .BN-cta {
   text-align: center;
   margin-top: 40px;
@@ -109,7 +125,7 @@ body {
   background-color: purple;
 }
 
-
+/* Mobile responsiveness */
 @media (max-width: 480px) {
   .BN-title {
     text-align: left;
@@ -117,53 +133,201 @@ body {
     font-weight: 550;
     color: #4caf50;
     margin-bottom: 10px;
-}
+  }
+
   .BN-subtitle {
     text-align: left;
     font-size: 1.1em;
     margin-bottom: 14px;
     color: #ccc;
-}
+  }
+
   .BN-container {
     width: 90%;
     margin: 0 auto;
     padding: 0px;
   }
+
   .BN-card {
-    padding: 10px;
-    border-radius: 5px;
+    padding: 12px;
+    border-radius: 8px;
     width: 100%;
   }
-  
+
   .BN-card-title {
-    font-size: 1em;
+    font-size: 1.1em;
     margin-bottom: 8px;
   }
-  
+
   .BN-card-desc {
+    font-size: 0.8em;
+    margin-bottom: 8px;
+  }
+
+  .BN-card-date {
     font-size: 0.7em;
     margin-bottom: 8px;
   }
-  
-  .BN-card-date {
-    font-size: 0.6em;
-    margin-bottom: 8px;
-  }
-  
+
   .BN-button {
-    background-color: #4caf50;
-    color: white;
     padding: 8px 10px;
-    border: none;
     font-size: 12px;
     width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
   }
-  
-  .BN-button:hover {
-    background-color: #2eb532;
+}
+
+/* Form container */
+.BN-form {
+  margin: 2rem auto;
+  max-width: 600px;
+  background-color: #1c1c1c;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Form title */
+.BN-form-title {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Inputs and textarea */
+.BN-form-input,
+.BN-form-textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #444;
+  background-color: #2b2b2b;
+  color: #eee;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.BN-form-input:focus,
+.BN-form-textarea:focus {
+  border-color: #7d3cff;
+}
+
+/* Submit button */
+.BN-button.BN-button-purple {
+  background-color: #7d3cff;
+  color: #fff;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.BN-button.BN-button-purple:hover {
+  background-color: #9b5bff;
+}
+
+/* React Quill Dark Theme */
+.ql-toolbar.ql-snow {
+  background: #2c2c2c;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  color: #fff;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label,
+.ql-toolbar.ql-snow .ql-stroke {
+  color: #fff;
+  stroke: #fff;
+}
+
+.ql-toolbar.ql-snow .ql-picker-options {
+  background: #2c2c2c;
+  color: #fff;
+}
+
+.ql-container.ql-snow {
+  background: #1e1e1e;
+  border: none;
+  color: #fff;
+  border-radius: 0 0 8px 8px;
+}
+
+.ql-editor {
+  min-height: 150px;
+  color: #fff;
+}
+
+.ql-editor::before {
+  color: #bbb; /* placeholder color */
+}
+
+.BN-form .ql-container,
+.BN-form .ql-toolbar {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Limit grid to 4 cards per row on large screens */
+.BN-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Fix card height & show short preview */
+.BN-card {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  height: 320px;  /* adjust as needed */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.BN-card-desc {
+  font-size: 0.95em;
+  color: #bbb;
+  margin-bottom: 12px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* show only 3 lines */
+  -webkit-box-orient: vertical;
+}
+
+.BN-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Force exactly 4 per row on large screens */
+@media (min-width: 1024px) {
+  .BN-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
-  
-  }
+}
+
+.BN-card-desc {
+  font-size: 0.95em;
+  color: #bbb;
+  margin-bottom: 12px;
+  flex: 1; /* let it fill remaining space */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;   /* Show 3 lines */
+  -webkit-box-orient: vertical;
+}
+
+
