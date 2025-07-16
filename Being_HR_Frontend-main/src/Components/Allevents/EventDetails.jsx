@@ -4,12 +4,14 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./EventDetails.css";
 import { useAuth } from "../AuthContext"; // Import authentication context
+
 const EventCard = () => {
   const { id } = useParams(); // Get event ID from URL
   const [event, setEvent] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth(); // Get user authentication status
+
   useEffect(() => {
     console.log("Event ID from URL:", id); // Check if ID is received
 
@@ -41,11 +43,13 @@ const EventCard = () => {
     }
   };
 
-
-
   if (!event) {
     return <p>Loading...</p>;
   }
+
+  // ✅ New: Combine event.date and event.time to check if expired
+  const eventDateTime = new Date(`${event.date} ${event.time}`);
+  const isExpired = eventDateTime < new Date();
 
   return (
     <div>
@@ -59,11 +63,15 @@ const EventCard = () => {
         <div className="event-header">
           <div>
             <h2 className="event-title">{event.title}</h2>
-            <p className="event-details"> {event.eventctg} | {event.language} | {event.agelimit}+ | {event.duration} Minutes
+            <p className="event-details">
+              {event.eventctg} | {event.language} | {event.agelimit}+ | {event.duration} Minutes
             </p>
-
           </div>
+          {isExpired ? (
+            <button className="expired-button" disabled>Expired</button>
+          ) : (
             <button className="book-button" onClick={handleBooking}>Book</button>
+          )}
         </div>
 
         <hr className="divider" />
@@ -84,19 +92,20 @@ const EventCard = () => {
       </div>
 
       {/* Share & Interest Section */}
-
-
-
       <div className="share-interest-container">
         {/* Share Box */}
         <div className="share-box">
           <h3>Share this event</h3>
           <div className="social-icons">
             <div className="social-icon">
-              <Link to="https://x.com/i_beinghr">  <img src="https://img.icons8.com/ios11/512/facebook-new.png" alt="Facebook" /></Link>
+              <Link to="https://x.com/i_beinghr">
+                <img src="https://img.icons8.com/ios11/512/facebook-new.png" alt="Facebook" />
+              </Link>
             </div>
             <div className="social-icon">
-              <Link to="https://x.com/i_beinghr">  <img src="https://cdn-icons-png.flaticon.com/512/733/733635.png" alt="Twitter" /> </Link>
+              <Link to="https://x.com/i_beinghr">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733635.png" alt="Twitter" />
+              </Link>
             </div>
           </div>
         </div>
@@ -113,21 +122,12 @@ const EventCard = () => {
             <button className="interested-button">Interested?</button>
           </div>
         </div>
-        {/* YAHA TEXT BOx VALA SHOW KRNA HAI */}
 
+        {/* Event Description */}
         <div className="events-aboutus-container">
-
-          {/* Yaha se Niche ka pura code hata de Till Line no. 167 TAK */}
-
-          {/* Event Description */}
           <p className="event-description" dangerouslySetInnerHTML={{ __html: event.description }} />
-          {/* Yaha Tak ka code hata de pura or Jo text box mai save kiya tha uska details yaha show krna */}
-
         </div>
-
       </div>
-
-
     </div>
   );
 };

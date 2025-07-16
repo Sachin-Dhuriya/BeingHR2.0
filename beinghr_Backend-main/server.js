@@ -11,6 +11,10 @@ const mongoose = require('mongoose');
 const cors = require("cors");
 const User = require("./models/User"); // Ensure correct case
 
+const cron = require("node-cron");
+const moment = require("moment"); // optional, helps with date math; install with: npm install moment
+
+
 //---------------------------------------NodeMailer Setup-------------------------------------------------
 const nodemailer = require("nodemailer");
 
@@ -51,6 +55,64 @@ const sendConfirmationEmail = async (email, name, eventName) => {
         console.error("Error sending email:", error);
     }
 };
+
+
+//----------------------------------------Reminder---------------------------------------------------------
+// Function to send reminder email
+// Reminder: 1 day before
+const sendOneDayReminderEmail = async (email, name, eventName, eventDate) => {
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: `⏰ Just 1 day to go: ${eventName}!`,
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f4; padding: 20px;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px;">
+                        <h2 style="color: #FF9800; text-align: center;">⏰ Event is Tomorrow!</h2>
+                        <p style="font-size: 16px;">Hi <strong>${name}</strong>,</p>
+                        <p style="font-size: 16px;">We’re excited to remind you that <strong>${eventName}</strong> is happening tomorrow on <strong>${eventDate}</strong>! 🎉</p>
+                        <p style="font-size: 16px;">Get ready and mark your calendar!</p>
+                        <br />
+                        <p style="font-size: 16px;">See you soon,</p>
+                        <p style="font-size: 16px; font-weight: bold;">The BeingHR Team</p>
+                    </div>
+                </div>
+            `,
+        });
+        console.log(`1 day reminder email sent to ${email}`);
+    } catch (error) {
+        console.error("Error sending 1 day reminder email:", error);
+    }
+};
+
+// Reminder: 1 hour before
+const sendOneHourReminderEmail = async (email, name, eventName, eventDate) => {
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: `🚀 Just 1 hour left for: ${eventName}!`,
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f4; padding: 20px;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px;">
+                        <h2 style="color: #FF5722; text-align: center;">🚀 Almost Time!</h2>
+                        <p style="font-size: 16px;">Hey <strong>${name}</strong>,</p>
+                        <p style="font-size: 16px;">Just a quick reminder: <strong>${eventName}</strong> is starting in 1 hour on <strong>${eventDate}</strong>! 🎉</p>
+                        <p style="font-size: 16px;">We can’t wait to see you there. Make sure to join on time!</p>
+                        <br />
+                        <p style="font-size: 16px;">Cheers,</p>
+                        <p style="font-size: 16px; font-weight: bold;">The BeingHR Team</p>
+                    </div>
+                </div>
+            `,
+        });
+        console.log(`1 hour reminder email sent to ${email}`);
+    } catch (error) {
+        console.error("Error sending 1 hour reminder email:", error);
+    }
+};
+
 
 
 //---------------------------------------Connect to MongoDB-------------------------------------------------
@@ -103,20 +165,20 @@ app.use('/api/events', eventRoutes);
 
 //-------------------------------------Contact Form Route----------------------------------------------
 const contactRoute = require('./routes/contactRoute.js')
-app.use('/api',contactRoute)
+app.use('/api', contactRoute)
 
 //--------------------------------------HomePage Container------------------------------------------------
 const homepageContainer = require('./routes/homepageContainer.js')
-app.use('/api',homepageContainer)
+app.use('/api', homepageContainer)
 //--------------------------------------Home Card------------------------------------------------
-const homepagCard= require('./routes/homeCard.js')
-app.use('/api/admin',homepagCard)
+const homepagCard = require('./routes/homeCard.js')
+app.use('/api/admin', homepagCard)
 //--------------------------------------Voice Cards------------------------------------------------
-const voiceCardRoutes = require('./routes/voiceCardRoutes.js') 
+const voiceCardRoutes = require('./routes/voiceCardRoutes.js')
 app.use('/api/admin', voiceCardRoutes);
 //--------------------------------------Blog Post------------------------------------------------
-const blogRoutes = require('./routes/blogRoutes');      
-app.use('/api/admin',blogRoutes)
+const blogRoutes = require('./routes/blogRoutes');
+app.use('/api/admin', blogRoutes)
 //-------------------------------------Event Registration Form Route----------------------------------------------
 app.post("/eventregistration", async (req, res) => {
     try {
@@ -132,7 +194,7 @@ app.post("/eventregistration", async (req, res) => {
             officialEmail,
             phone,
             location,
-            linkedinUrl,
+            linkedin,
             eventName,
             eventId
         } = req.body;
@@ -151,7 +213,7 @@ app.post("/eventregistration", async (req, res) => {
             officialEmail,
             phone,
             location,
-            linkedinUrl,
+            linkedin,
             eventName,
             email: req.body.email
         });
@@ -168,7 +230,7 @@ app.post("/eventregistration", async (req, res) => {
                 officialEmail,
                 phone,
                 location,
-                linkedinUrl,
+                linkedin,
             });
             await event.save();
         }
@@ -192,7 +254,7 @@ app.post("/eventregistration", async (req, res) => {
 });
 
 app.get("/eventregistration", async (req, res) => {
-    try {   
+    try {
         let registrationDetails = await eventRegForm.find();
         res.json(registrationDetails);
     } catch (error) {
@@ -200,6 +262,97 @@ app.get("/eventregistration", async (req, res) => {
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 });
+
+
+app.get('/allevent',async(req,res)=>{
+    try {
+
+        let data = await createEvent.find();
+        res.json(data)
+        
+    } catch (error) {
+        res.status(500).json({message: "Internal Server Error"})
+    }
+})
+
+// PUT /events/:id
+app.put('/events/:id', async (req, res) => {
+  try {
+    const updatedEvent = await Event.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body }, // update with fields sent from frontend
+      { new: true }
+    );
+    if (!updatedEvent) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+    res.json(updatedEvent);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+//----------------------------------------Reminder----------------------------------------------------------------------
+// Track sent reminders to avoid duplicate emails
+const sentReminders = new Set();
+
+// Cron job: runs every minute
+cron.schedule("* * * * *", async () => {
+    console.log("⏰ Checking for upcoming event reminders...");
+
+    try {
+        const events = await createEvent.find();
+        const now = new Date();
+
+        events.forEach(async (event) => {
+            const combinedDateTime = `${event.date}T${event.time}:00`; 
+            const eventDate = new Date(combinedDateTime);
+            if (!eventDate || isNaN(eventDate)) return;
+
+            const diffMs = eventDate - now;
+            const diffHours = diffMs / (1000 * 60 * 60);
+
+            const oneDayBeforeKey = `${event._id}_1d`;
+            const oneHourBeforeKey = `${event._id}_1h`;
+
+            if (diffHours <= 24 && diffHours > 0 && !sentReminders.has(oneDayBeforeKey)) {
+                // Send 1 day reminder
+                for (const reg of event.registrations) {
+                    await sendOneDayReminderEmail(
+                        reg.email,
+                        reg.name,
+                        event.title,
+                        moment(eventDate).format('LLLL')
+                    );
+                }
+                sentReminders.add(oneDayBeforeKey);
+                console.log(`✅ Sent 1 day reminder for event: ${event.title}`);
+            }
+
+            if (diffHours <= 1 && diffHours > 0 && !sentReminders.has(oneHourBeforeKey)) {
+                // Send 1 hour reminder
+                for (const reg of event.registrations) {
+                    await sendOneHourReminderEmail(
+                        reg.email,
+                        reg.name,
+                        event.title,
+                        moment(eventDate).format('LLLL')
+                    );
+                }
+                sentReminders.add(oneHourBeforeKey);
+                console.log(`✅ Sent 1 hour reminder for event: ${event.title}`);
+            }
+        });
+    } catch (error) {
+        console.error("Error checking reminders:", error);
+    }
+});
+
+
+
+
 //--------------------------------------Event Details Route----------------------------------------------------------------
 app.get("/eventdetails", async (req, res) => {
     try {
@@ -232,13 +385,13 @@ app.get("/eventdetails/:id", async (req, res) => {
 //--------------------------------------User Details Show Route----------------------------------------------------------------
 app.get("/users", async (req, res) => {
     try {
-      const users = await User.find({});
-      res.status(200).json(users);
+        const users = await User.find({});
+        res.status(200).json(users);
     } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-  });
+});
 
 //--------------------------------------Get Logged-in User----------------------------------------------------------------
 app.get("/user", (req, res) => {
@@ -274,29 +427,29 @@ app.post("/register-event", async (req, res) => {
 
 //--------------------------------------Check Admin----------------------------------------------------------------
 app.get("/check-admin", async (req, res) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: "Not logged in" });
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: "Not logged in" });
+        }
+        const user = await User.findById(req.user._id);
+        res.json({ isAdmin: user?.isAdmin || false });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    const user = await User.findById(req.user._id);
-    res.json({ isAdmin: user?.isAdmin || false });
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 });
 
 
 
 //--------------------------------------auth status----------------------------------------------------------------
-  app.get("/auth-status", (req, res) => {
+app.get("/auth-status", (req, res) => {
     if (req.isAuthenticated()) {
-      res.json({ isAuthenticated: true });
+        res.json({ isAuthenticated: true });
     } else {
-      res.json({ isAuthenticated: false });
+        res.json({ isAuthenticated: false });
     }
-  });
+});
 
-  //---------------------------------------Home Page Card Admin Route--------------------------------------------
+//---------------------------------------Home Page Card Admin Route--------------------------------------------
 
 //--------------------------------------Listening Port----------------------------------------------------------------
 const PORT = process.env.PORT || 5000;

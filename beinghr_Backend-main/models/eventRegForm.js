@@ -9,7 +9,7 @@ const eventRegFormSchema = new Schema({
     officialEmail: { type: String, required: true },   // renamed for clarity
     phone: { type: Number, required: true },
     location: { type: String, required: true },
-    linkedinUrl: { type: String },
+    linkedin: { type: String },
     eventName: { type: String, required: true },
     registeredAt: { type: Date, default: Date.now }
 });

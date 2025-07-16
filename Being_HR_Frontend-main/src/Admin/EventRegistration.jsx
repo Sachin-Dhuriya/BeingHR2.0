@@ -1,123 +1,101 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './DashBoard.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './EventRegistration.css';
 
-const DashBoard = () => {
-  const [eventRegistrations, setEventRegistrations] = useState([]);
-  const [adminLoading, setAdminLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState('All'); // default to 'All'
-  const navigate = useNavigate();
+const EventCards = () => {
+  const [events, setEvents] = useState([]);
+  const [openTables, setOpenTables] = useState({});
 
   useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+    fetchEvents();
+  }, []);
 
-        if (res.status === 401) {
-          navigate('/login');
-          return;
-        }
-
-        const data = await res.json();
-        if (!data.isAdmin) {
-          navigate('/');
-        }
-      } catch (error) {
-        console.error('Error checking admin:', error);
-        navigate('/');
-      } finally {
-        setAdminLoading(false);
-      }
-    };
-
-    checkAdmin();
-  }, [navigate]);
-
-  useEffect(() => {
-    if (!adminLoading) {
-      const fetchEventRegistrations = async () => {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/eventregistration`, { credentials: 'include' });
-          const data = await response.json();
-          setEventRegistrations(data);
-        } catch (error) {
-          console.error('Error fetching event registrations:', error);
-        }
-      };
-
-      fetchEventRegistrations();
+  const fetchEvents = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/allevent');
+      setEvents(res.data);
+    } catch (err) {
+      console.error('Error fetching events:', err);
     }
-  }, [adminLoading]);
+  };
 
-  if (adminLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // Get unique event names from registrations
-  const uniqueEvents = Array.from(new Set(eventRegistrations.map(reg => reg.eventName)));
-
-  // Filtered registrations based on selected event
-  const filteredRegistrations = selectedEvent === 'All'
-    ? eventRegistrations
-    : eventRegistrations.filter(reg => reg.eventName === selectedEvent);
+  const toggleTable = (eventId) => {
+    setOpenTables((prev) => ({
+      ...prev,
+      [eventId]: !prev[eventId],
+    }));
+  };
 
   return (
-    <div className="admin-page">
-      <h1>Registration List</h1>
+    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {events.map((event) => (
+        <div key={event._id} className="border rounded-xl shadow p-4">
+          <img
+            src={event.image}
+            alt={event.title}
+            className="w-full h-48 object-cover rounded mb-4"
+          />
+          <h2 className="text-xl font-semibold mb-2">{event.title}</h2>
+          <p className="text-gray-600 mb-1">📅 {event.date} | 🕒 {event.time}</p>
+          <p className="text-gray-600 mb-1">📍 {event.location}</p>
+          <p className="text-gray-600 mb-1">💲 {event.price}</p>
 
-      {/* Filter Buttons */}
-      <div className="filter-buttons">
-        <button
-          className={selectedEvent === 'All' ? 'active' : ''}
-          onClick={() => setSelectedEvent('All')}
-        >
-          All Events
-        </button>
-        {uniqueEvents.map(eventName => (
-          <button
-            key={eventName}
-            className={selectedEvent === eventName ? 'active' : ''}
-            onClick={() => setSelectedEvent(eventName)}
-          >
-            {eventName}
-          </button>
-        ))}
-      </div>
+          <div className="flex flex-wrap mt-3 gap-2">
+            <button
+              className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition"
+              onClick={() => toggleTable(event._id)}
+            >
+              {openTables[event._id] ? 'Hide Booking' : 'View Booking'}
+            </button>
+          </div>
 
-      <table className="user-table">
-        <thead>
-          <tr>
-            <th>Sr No</th>
-            <th>Name</th>
-            <th>Personal Email</th>
-            <th>Official Email</th>
-            <th>Phone</th>
-            <th>Designation</th>
-            <th>Organisation</th>
-            <th>Location</th>
-            <th>Event Name</th>
-            <th>Registered At</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRegistrations.map((user, index) => (
-            <tr key={user._id || index}>
-              <td>{index + 1}</td>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>{user.officialEmail}</td>
-              <td>{user.phone}</td>
-              <td>{user.designation}</td>
-              <td>{user.organisation}</td>
-              <td>{user.location}</td>
-              <td>{user.eventName}</td>
-              <td>{new Date(user.registeredAt).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          {/* Registration Table */}
+          {openTables[event._id] && (
+            <div className="overflow-auto mt-4">
+              {event.registrations.length > 0 ? (
+                <table className="min-w-full text-sm text-left border">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="p-2 border">Name</th>
+                      <th className="p-2 border">Designation</th>
+                      <th className="p-2 border">Organisation</th>
+                      <th className="p-2 border">Email</th>
+                      <th className="p-2 border">Official Email</th>
+                      <th className="p-2 border">Phone</th>
+                      <th className="p-2 border">Location</th>
+                      <th className="p-2 border">Registered At</th>
+                      <th className="p-2 border">Linkedin</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {event.registrations.map((user) => (
+                      <tr key={user._id}>
+                        <td className="p-2 border">{user.name}</td>
+                        <td className="p-2 border">{user.designation}</td>
+                        <td className="p-2 border">{user.organisation}</td>
+                        <td className="p-2 border">{user.email}</td>
+                        <td className="p-2 border">{user.officialEmail}</td>
+                        <td className="p-2 border">{user.phone}</td>
+                        <td className="p-2 border">{user.location}</td>
+                        <td className="p-2 border">{new Date(user.registeredAt).toLocaleString()}</td>
+                        <td className="p-2 border">
+                          <a href={user.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                            View
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="text-gray-500">No bookings found for this event.</p>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 };
 
-export default DashBoard;
+export default EventCards;

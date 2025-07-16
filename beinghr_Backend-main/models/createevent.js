@@ -22,7 +22,7 @@ const createEventSchema = new Schema({
             officialEmail: String,
             phone: Number,
             location: String,
-            linkedinUrl: String,
+            linkedin: String,
             registeredAt: { type: Date, default: Date.now }
         }
     ]
