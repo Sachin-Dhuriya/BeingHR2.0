@@ -39,11 +39,16 @@ const cards = [
     description: "Handle the Homepage Voice Cards from here",
     link: "/VoiceCard"
   },
-   {
+  {
     title: "Blog Page",
     description: "Handle the Blog Post from here",
     link: "/Blogpage"
-  }
+  },
+  {
+    title: "Update Events",
+    description: "Modify and manage your existing events.",
+    link: "/update-events"
+  },
 ];
 
 const AdminHome = () => {
