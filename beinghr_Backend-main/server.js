@@ -300,7 +300,6 @@ const sentReminders = new Set();
 
 // Cron job: runs every minute
 cron.schedule("* * * * *", async () => {
-    console.log("⏰ Checking for upcoming event reminders...");
 
     try {
         const events = await createEvent.find();

@@ -16,7 +16,7 @@ const BlogReadingPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch("http://localhost:5000/user", { credentials: "include" });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           setCurrentUser(data);
@@ -33,7 +33,7 @@ const BlogReadingPage = () => {
   // Fetch blog
   const fetchBlog = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/blog", { credentials: "include" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog`, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         const found = data.find((item) => item._id === id && item.isApprove === true);
@@ -49,7 +49,7 @@ const BlogReadingPage = () => {
   // Fetch comments
   const fetchComments = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/blog/${id}/comments`, { credentials: "include" });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog/${id}/comments`, { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         setComments(data);
@@ -73,7 +73,7 @@ const BlogReadingPage = () => {
     setLiking(true);
     setErrorMsg("");
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/blog/${id}/like`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog/${id}/like`, {
         method: "POST",
         credentials: "include",
       });
@@ -96,7 +96,7 @@ const BlogReadingPage = () => {
     if (!newComment.trim() || !currentUser) return;
     setLoadingComment(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/blog/${id}/comment`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog/${id}/comment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

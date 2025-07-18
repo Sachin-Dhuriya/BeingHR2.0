@@ -26,7 +26,7 @@ function Home() {
 
     const fetchExpertise = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/admin/cards");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/cards`);
         setExpertiseAreas(response.data);
       } catch (error) {
         console.error("Error fetching expertise areas:", error);
@@ -35,7 +35,7 @@ function Home() {
 
     const fetchVoiceCards = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/voicecard");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/voicecard`);
         setVoiceCards(res.data);
       } catch (error) {
         console.error("Error fetching voice cards:", error);

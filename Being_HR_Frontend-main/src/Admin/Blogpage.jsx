@@ -19,7 +19,7 @@ const Blogpage = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/check-admin', { withCredentials: true });
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/check-admin`, { withCredentials: true });
                 if (!res.data.isAdmin) {
                     navigate('/'); // redirect if not admin
                 } else {
@@ -38,7 +38,7 @@ const Blogpage = () => {
 
     const fetchBlogs = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/admin/blog');
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog`);
             setBlogs(res.data);
         } catch (error) {
             console.error('Error fetching blogs:', error);
@@ -47,7 +47,7 @@ const Blogpage = () => {
 
     const handleApprove = async (id) => {
         try {
-            await axios.post(`http://localhost:5000/api/admin/approveblog/${id}`);
+            await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/admin/approveblog/${id}`);
             fetchBlogs();
         } catch (error) {
             console.error('Error approving blog:', error);
@@ -56,7 +56,7 @@ const Blogpage = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/admin/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/admin/${id}`);
             fetchBlogs();
         } catch (error) {
             console.error('Error deleting blog:', error);

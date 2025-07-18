@@ -26,7 +26,7 @@ const UpdateEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/events');
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/events`);
       if (Array.isArray(res.data)) {
         setEvents(res.data);
       } else if (Array.isArray(res.data.events)) {
@@ -66,7 +66,7 @@ const UpdateEvents = () => {
     }
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/events/${editingEvent._id}`, data, {
+      const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/events/${editingEvent._id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert(res.data.message || "Event updated successfully");

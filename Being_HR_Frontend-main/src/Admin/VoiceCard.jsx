@@ -19,7 +19,7 @@ const VoiceCardForm = () => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-admin`, { credentials: 'include' });
         if (res.status === 401) {
           navigate('/login'); // Not logged in
           return;
@@ -47,7 +47,7 @@ const VoiceCardForm = () => {
 
   const fetchVoiceCards = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/voicecard', { credentials: 'include' });
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/voicecard`, { credentials: 'include' });
       const data = await res.json();
       setCards(data);
     } catch (error) {
@@ -84,7 +84,7 @@ const VoiceCardForm = () => {
     try {
       let res, data;
       if (editingId) {
-        res = await fetch(`http://localhost:5000/api/admin/voicecard/${editingId}`, {
+        res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/voicecard/${editingId}`, {
           method: 'PUT',
           body: form,
           credentials: 'include'
@@ -95,7 +95,7 @@ const VoiceCardForm = () => {
           setMessage("Please upload an image.");
           return;
         }
-        res = await fetch('http://localhost:5000/api/admin/voicecard', {
+        res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/voicecard`, {
           method: 'POST',
           body: form,
           credentials: 'include'
@@ -121,7 +121,7 @@ const VoiceCardForm = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this voice card?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/voicecard/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/voicecard/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

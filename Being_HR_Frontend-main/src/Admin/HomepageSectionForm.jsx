@@ -15,7 +15,7 @@ const HomepageSectionForm = () => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-admin`, { credentials: 'include' });
 
         if (res.status === 401) {
           navigate('/login'); // Not logged in
@@ -46,7 +46,7 @@ const HomepageSectionForm = () => {
 
   const fetchHomepageSection = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/admin/homepage-section', { withCredentials: true });
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/homepage-section`, { withCredentials: true });
       setHomepageData(response.data.homepageSection);
     } catch (error) {
       console.error('Error fetching homepage section:', error.message);
@@ -79,7 +79,7 @@ const HomepageSectionForm = () => {
 
     try {
       await axios.post(
-        'http://localhost:5000/api/admin/homepage-section',
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/homepage-section`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

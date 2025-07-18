@@ -14,7 +14,7 @@ export default function HRConclave() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/homepage-section");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/homepage-section`);
         setHomepageData(res.data.homepageSection);
       } catch (err) {
         console.error("Error fetching homepage data:", err);

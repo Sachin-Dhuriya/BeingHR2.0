@@ -17,7 +17,7 @@ const HomepageCard = () => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-admin`, { credentials: 'include' });
         if (res.status === 401) {
           navigate('/login'); // not logged in
           return;
@@ -40,7 +40,7 @@ const HomepageCard = () => {
 
   const fetchCards = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/cards', { withCredentials: true });
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/cards`, { withCredentials: true });
       setCards(res.data);
     } catch (err) {
       console.error(err);
@@ -83,10 +83,10 @@ const HomepageCard = () => {
 
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/api/admin/cards/${editId}`, form, { withCredentials: true });
+        await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/admin/cards/${editId}`, form, { withCredentials: true });
         setMessage('Card updated!');
       } else {
-        await axios.post('http://localhost:5000/api/admin/cards', form, { withCredentials: true });
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/admin/cards`, form, { withCredentials: true });
         setMessage('Card created!');
       }
 
@@ -111,7 +111,7 @@ const HomepageCard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/cards/${id}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/admin/cards/${id}`, { withCredentials: true });
       setMessage('Card deleted.');
       fetchCards();
     } catch (err) {

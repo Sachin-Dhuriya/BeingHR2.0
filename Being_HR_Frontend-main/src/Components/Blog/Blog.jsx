@@ -21,7 +21,7 @@ const Blog = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/admin/blog", { credentials: "include" });
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog`, { credentials: "include" });
         if (res.ok) {
           const data = await res.json();
           // Filter only approved blogs
@@ -42,12 +42,12 @@ const Blog = () => {
   useEffect(() => {
     const checkAuthAndFetchUser = async () => {
       try {
-        const authRes = await fetch("http://localhost:5000/auth-status", { credentials: "include" });
+        const authRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth-status`, { credentials: "include" });
         const authData = await authRes.json();
 
         if (authData.isAuthenticated) {
           setIsAuthenticated(true);
-          const userRes = await fetch("http://localhost:5000/user", { credentials: "include" });
+          const userRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/user`, { credentials: "include" });
           if (userRes.ok) {
             const userData = await userRes.json();
             setFormData(prev => ({ ...prev, author: userData.name }));
@@ -78,7 +78,7 @@ const Blog = () => {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/admin/blog", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -93,7 +93,7 @@ const Blog = () => {
         setShowForm(false);
 
         // Refresh blogs list after submitting
-        const updatedRes = await fetch("http://localhost:5000/api/admin/blog", { credentials: "include" });
+        const updatedRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/blog`, { credentials: "include" });
         if (updatedRes.ok) {
           const updatedData = await updatedRes.json();
           const approvedBlogs = updatedData.filter(blog => blog.isApprove === true);

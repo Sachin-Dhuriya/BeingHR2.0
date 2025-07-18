@@ -10,7 +10,7 @@ const DashBoard = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const res = await fetch('http://localhost:5000/check-admin', { credentials: 'include' });
+                const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/check-admin`, { credentials: 'include' });
 
                 if (res.status === 401) {
                     // Not logged in

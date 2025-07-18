@@ -12,7 +12,7 @@ const EventCards = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/allevent');
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/allevent`);
       setEvents(res.data);
     } catch (err) {
       console.error('Error fetching events:', err);
